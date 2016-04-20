@@ -16,24 +16,35 @@
       android:text="FUCKING APPS THAT WASTE YOUR FUCKING TIME"
       android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
 
+  <EditText android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/tv_title"
+      android:textColor="@android:color/white"
+      tools:text="Facebook"
+      android:theme="@style/EditTextTheme"
+      android:drawableRight="@drawable/ic_search"
+      android:id="@+id/et_search"
+      android:inputType="text"
+      android:imeOptions="actionDone"/>
+
   <android.support.v7.widget.RecyclerView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_below="@+id/tv_title"
+      android:layout_below="@+id/et_search"
       tools:listitem="@layout/item_package"
       android:id="@+id/rv_packages"
   />
 
   <TextView android:layout_width="match_parent"
-  android:layout_height="48dp"
-  android:textStyle="bold"
-  android:gravity="center"
-  android:background="?attr/colorPrimaryDark"
-  android:layout_alignParentBottom="true"
-  android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-  android:text="ADVANCED FUCKING OPTIONS"
-  android:drawableEnd="@drawable/ic_arrow_forward"
-  android:id="@+id/tv_advSettings"/>
+      android:layout_height="48dp"
+      android:textStyle="bold"
+      android:gravity="center"
+      android:background="?attr/colorPrimaryDark"
+      android:layout_alignParentBottom="true"
+      android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+      android:text="ADVANCED FUCKING OPTIONS"
+      android:drawableEnd="@drawable/ic_arrow_forward"
+      android:id="@+id/tv_advSettings"/>
 
   <ProgressBar android:layout_width="64dp"
       android:layout_height="64dp"
