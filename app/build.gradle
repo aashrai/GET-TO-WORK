@@ -1,0 +1,38 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+
+android {
+  compileSdkVersion 23
+  buildToolsVersion "23.0.2"
+
+  defaultConfig {
+    applicationId "aashrai.android.gettowork"
+    minSdkVersion 17
+    targetSdkVersion 23
+    versionCode 1
+    versionName "1.0"
+    vectorDrawables.useSupportLibrary true
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+ext {
+  supportLibVersion = "23.2.1"
+  daggerVersion = "2.2"
+  butterknifeVersion = "7.0.1"
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  testCompile 'junit:junit:4.12'
+  compile "com.android.support:appcompat-v7:$supportLibVersion"
+  compile "com.android.support:recyclerview-v7:$supportLibVersion"
+  compile "com.google.dagger:dagger:$daggerVersion"
+  apt "com.google.dagger:dagger-compiler:$daggerVersion"
+  compile "com.jakewharton:butterknife:$butterknifeVersion"
+}
