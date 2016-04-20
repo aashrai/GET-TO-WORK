@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryDark">
+
+  <TextView android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:id="@+id/tv_title"
+      android:text="FUCKING APPS THAT WASTE YOUR FUCKING TIME"
+      android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"/>
+
+  <android.support.v7.widget.RecyclerView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/tv_title"
+      tools:listitem="@layout/item_package"
+      android:id="@+id/rv_packages"
+  />
+
+  <TextView android:layout_width="match_parent"
+  android:layout_height="48dp"
+  android:textStyle="bold"
+  android:gravity="center"
+  android:background="?attr/colorPrimaryDark"
+  android:layout_alignParentBottom="true"
+  android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+  android:text="ADVANCED FUCKING OPTIONS"
+  android:drawableEnd="@drawable/ic_arrow_forward"
+  android:id="@+id/tv_advSettings"/>
+
+  <ProgressBar android:layout_width="64dp"
+      android:layout_height="64dp"
+      android:layout_centerInParent="true"
+      android:visibility="gone"
+      android:indeterminate="true"
+      android:id="@+id/progress"/>
+
+</RelativeLayout>
