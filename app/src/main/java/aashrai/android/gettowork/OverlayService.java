@@ -1,5 +1,6 @@
 package aashrai.android.gettowork;
 
+import aashrai.android.gettowork.view.activity.AppLockActivity;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,8 +23,10 @@ public class OverlayService extends AccessibilityService {
   @Override public void onAccessibilityEvent(AccessibilityEvent event) {
     Set<String> activatedPackages =
         sharedPreferences.getStringSet(Constants.ACTIVATED_PACKAGES, new HashSet<String>());
-    if (activatedPackages.contains(event.getPackageName().toString())) {
+    boolean appLockActivated = sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false);
+    if (appLockActivated && activatedPackages.contains(event.getPackageName().toString())) {
       Log.d(TAG, "onAccessibilityEvent() called with: " + "event = [" + event + "]");
+      launchAppLock();
     }
   }
 

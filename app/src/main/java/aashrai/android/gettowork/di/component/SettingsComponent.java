@@ -1,6 +1,6 @@
 package aashrai.android.gettowork.di.component;
 
-import aashrai.android.gettowork.view.SettingsActivity;
+import aashrai.android.gettowork.view.activity.SettingsActivity;
 import aashrai.android.gettowork.di.SettingsScope;
 import dagger.Subcomponent;
 

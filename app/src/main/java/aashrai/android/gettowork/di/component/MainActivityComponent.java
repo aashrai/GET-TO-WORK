@@ -1,6 +1,6 @@
 package aashrai.android.gettowork.di.component;
 
-import aashrai.android.gettowork.view.MainActivity;
+import aashrai.android.gettowork.view.activity.MainActivity;
 import aashrai.android.gettowork.di.MainActivityScope;
 import aashrai.android.gettowork.di.module.MainActivityModule;
 import dagger.Subcomponent;

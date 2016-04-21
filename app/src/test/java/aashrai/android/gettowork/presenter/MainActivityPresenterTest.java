@@ -48,7 +48,7 @@ public class MainActivityPresenterTest {
     //Test for no included packages
     sharedPreferences.edit().putBoolean(Constants.APP_LOCK_ACTIVATED, false).commit();
     given(activatedPackages.size()).willReturn(0);
-    mainActivityPresenter.onAppLockActivate();
+    mainActivityPresenter.onAppLockActivateClick();
     verify(mainActivityView).showToast(Constants.ADD_APPS_MESSAGE);
     verify(mainActivityView).launchActivity(
         Utils.getSettingsActivityIntent(RuntimeEnvironment.application));
@@ -58,7 +58,7 @@ public class MainActivityPresenterTest {
   @SuppressLint("CommitPrefEdits") @Test public void testOnAppLockActivate_INCLUDEDPACKAGES() {
     sharedPreferences.edit().putBoolean(Constants.APP_LOCK_ACTIVATED, false).commit();
     given(activatedPackages.size()).willReturn(5);
-    mainActivityPresenter.onAppLockActivate();
+    mainActivityPresenter.onAppLockActivateClick();
     verify(mainActivityView).showToast(Constants.OVERLAY_ACTIVATED_MESSAGE);
     verify(mainActivityView).launchActivity(Utils.getHomeScreenIntent());
     assertTrue(sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false));
@@ -66,7 +66,7 @@ public class MainActivityPresenterTest {
 
   @SuppressLint("CommitPrefEdits") @Test public void testOnAppLockActivate_APPLOCK_DEACTIVATED() {
     sharedPreferences.edit().putBoolean(Constants.APP_LOCK_ACTIVATED, true).commit();
-    mainActivityPresenter.onAppLockActivate();
+    mainActivityPresenter.onAppLockActivateClick();
     verify(mainActivityView).launchActivity(Utils.getHomeScreenIntent());
     verify(mainActivityView).showToast(Constants.OVERLAY_DEACTIVATED_MESSAGE);
     assertFalse(sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false));

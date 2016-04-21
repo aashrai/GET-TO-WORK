@@ -1,9 +1,10 @@
-package aashrai.android.gettowork.view;
+package aashrai.android.gettowork.view.activity;
 
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.adapter.PackageListAdapter;
 import aashrai.android.gettowork.presenter.SettingsActivityPresenter;
+import aashrai.android.gettowork.view.SettingsView;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -40,16 +41,24 @@ public class SettingsActivity extends BaseActivity
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    ((GoToWorkApplication) getApplication()).getApplicationComponent()
-        .getSettingsComponent()
-        .inject(this);
     presenter.setView(this);
+    configureSearch();
+  }
+
+  private void configureSearch() {
     search.setOnEditorActionListener(this);
     compositeSubscription = new CompositeSubscription();
     compositeSubscription.add(RxTextView.textChanges(search)
         .debounce(100, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(this));
+  }
+
+  @Override
+  public void configureDagger() {
+    ((GoToWorkApplication) getApplication()).getApplicationComponent()
+        .getSettingsComponent()
+        .inject(this);
   }
 
   @Override public int getLayoutId() {

@@ -10,14 +10,15 @@
       android:supportsRtl="true"
       android:name=".GoToWorkApplication"
       android:theme="@style/AppTheme">
-    <activity android:name=".view.MainActivity">
+    <activity android:name=".view.activity.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
 
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
-    <activity android:name=".view.SettingsActivity"/>
+    <activity android:name=".view.activity.SettingsActivity"/>
+    <activity android:name=".view.activity.AppLockActivity"/>
 
     <service android:name=".OverlayService"
         android:label="\u2600 GO TO FUCKING WORK \u2600"
