@@ -12,6 +12,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import java.util.Set;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -81,5 +82,10 @@ public class MainActivityPresenterTest {
     verify(mainActivityView).showToast(Constants.OVERLAY_DEACTIVATED_MESSAGE);
     verify(mainActivityView).setActivateDrawable(playDrawable);
     assertFalse(sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false));
+  }
+
+  @After public void tearDown() throws Exception {
+    pauseDrawable = null;
+    playDrawable = null;
   }
 }

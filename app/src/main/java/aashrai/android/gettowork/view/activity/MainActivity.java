@@ -3,29 +3,80 @@ package aashrai.android.gettowork.view.activity;
 import aashrai.android.gettowork.Constants;
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
+import aashrai.android.gettowork.TimingGridDecorator;
+import aashrai.android.gettowork.adapter.TimingGridAdapter;
 import aashrai.android.gettowork.presenter.MainActivityPresenter;
 import aashrai.android.gettowork.view.MainActivityView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.OnClick;
+import java.util.Arrays;
+import java.util.List;
 import javax.inject.Inject;
 
-public class MainActivity extends BaseActivity implements MainActivityView {
+public class MainActivity extends BaseActivity
+    implements MainActivityView, TimingGridAdapter.onTimingClickListener {
 
   @Inject MainActivityPresenter presenter;
   @Inject SharedPreferences sharedPreferences;
   @Bind(R.id.iv_activate) ImageView activate;
+  @Bind(R.id.rv_timing_grid) RecyclerView timingsRecyclerView;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     presenter.setView(this);
     setActivateDrawable();
+    configureTimingsRecyclerView();
+  }
+
+  private void configureTimingsRecyclerView() {
+    timingsRecyclerView.setAdapter(getTimingGridAdapter());
+    timingsRecyclerView.setLayoutManager(getTimingLayoutManager());
+    timingsRecyclerView.addItemDecoration(new TimingGridDecorator());
+  }
+
+  @NonNull private GridLayoutManager getTimingLayoutManager() {
+    GridLayoutManager timingGridLayoutManager = new GridLayoutManager(this, 6);
+    timingGridLayoutManager.setSpanSizeLookup(getSpanSizeLookup());
+    return timingGridLayoutManager;
+  }
+
+  @NonNull private GridLayoutManager.SpanSizeLookup getSpanSizeLookup() {
+    return new GridLayoutManager.SpanSizeLookup() {
+      @Override public int getSpanSize(int position) {
+        switch (position) {
+          case 0:
+            return 6;
+          case 1:
+          case 2:
+          case 6:
+          case 7:
+            return 3;
+          case 3:
+          case 4:
+          case 5:
+            return 2;
+        }
+        return 0;
+      }
+    };
+  }
+
+  @NonNull private TimingGridAdapter getTimingGridAdapter() {
+    List<String> timings =
+        Arrays.asList("5 mins", "20 mins", "1 hr", "3 hrs", "6 hrs", "12 hrs", "24 hrs", "48 hrs");
+    TimingGridAdapter timingGridAdapter = new TimingGridAdapter(timings);
+    timingGridAdapter.setTimingClickListener(this);
+    return timingGridAdapter;
   }
 
   private void setActivateDrawable() {
@@ -66,5 +117,9 @@ public class MainActivity extends BaseActivity implements MainActivityView {
 
   @Override public void setActivateDrawable(Drawable drawable) {
     activate.setImageDrawable(drawable);
+  }
+
+  @Override public void onTimingClick(String timing) {
+
   }
 }

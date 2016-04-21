@@ -1,7 +1,11 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="thumbnail_size">58dp</dimen>
-    <dimen name="top_widget_padding">8dp</dimen>
+  <!-- Default screen margins, per the Android Design guidelines. -->
+  <dimen name="activity_horizontal_margin">16dp</dimen>
+  <dimen name="activity_vertical_margin">16dp</dimen>
+  <dimen name="thumbnail_size">58dp</dimen>
+  <dimen name="top_widget_padding">8dp</dimen>
+  <dimen name="activate_icon_size">150dp</dimen>
+  <dimen name="timing_grid_size">200dp</dimen>
+  <dimen name="timing_grid_size_half">100dp</dimen>
+  <dimen name="timing_grid_spacing">5dp</dimen>
 </resources>
