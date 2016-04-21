@@ -37,7 +37,7 @@ import javax.inject.Inject;
     if (!appLockActivate) {
       checkAndActivateAppLock();
     } else {
-      mainActivityView.changeActivateDrawable(
+      mainActivityView.setActivateDrawable(
           ContextCompat.getDrawable(context, R.drawable.ic_play_circle));
       mainActivityView.showToast(Constants.OVERLAY_DEACTIVATED_MESSAGE);
       launchHomeScreen();
@@ -45,7 +45,7 @@ import javax.inject.Inject;
   }
 
   private void checkAndActivateAppLock() {
-    mainActivityView.changeActivateDrawable(
+    mainActivityView.setActivateDrawable(
         ContextCompat.getDrawable(context, R.drawable.ic_pause_circle));
 
     if (activatedPackages.size() == 0) {

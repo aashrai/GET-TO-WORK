@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements MainActivityView {
     startActivity(intent);
   }
 
-  @Override public void changeActivateDrawable(Drawable drawable) {
+  @Override public void setActivateDrawable(Drawable drawable) {
     activate.setImageDrawable(drawable);
   }
 }

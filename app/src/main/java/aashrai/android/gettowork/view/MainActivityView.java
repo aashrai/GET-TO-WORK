@@ -9,5 +9,5 @@ public interface MainActivityView {
 
   void launchActivity(Intent intent);
 
-  void changeActivateDrawable(Drawable drawable);
+  void setActivateDrawable(Drawable drawable);
 }
