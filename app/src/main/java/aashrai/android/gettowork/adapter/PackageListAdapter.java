@@ -28,11 +28,14 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
     this.packageList = packageList;
     this.activatedPackages = activatedPackages;
     this.packageManager = packageManager;
+
+    Log.d(TAG, "PackageListAdapter: activated packages " + activatedPackages);
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
     holder.packageName.setText(packageList.get(position).loadLabel(packageManager));
-    holder.packageName.setChecked(activatedPackages.contains(packageList.get(position).name));
+    holder.packageName.setChecked(
+        activatedPackages.contains(packageList.get(position).packageName));
     holder.thumbnail.setImageDrawable(packageList.get(position).loadIcon(packageManager));
   }
 
@@ -65,18 +68,20 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
   public class ViewHolder extends RecyclerView.ViewHolder {
     @Bind(R.id.sw_activate) Switch packageName;
     @Bind(R.id.iv_thumbnail) ImageView thumbnail;
+    boolean defaultCheck;
 
     public ViewHolder(View itemView) {
       super(itemView);
+      defaultCheck = true;
       ButterKnife.bind(this, itemView);
     }
 
     @OnCheckedChanged(R.id.sw_activate) public void activateForPackage(boolean flag) {
-      Log.d(TAG, "activateForPackage() called with: " + "flag = [" + flag + "]");
+      String packageName = packageList.get(getAdapterPosition()).packageName;
       if (flag) {
-        activatedPackages.add(packageName.getText().toString());
+        activatedPackages.add(packageName);
       } else {
-        activatedPackages.remove(packageName.getText().toString());
+        activatedPackages.remove(packageName);
       }
     }
   }

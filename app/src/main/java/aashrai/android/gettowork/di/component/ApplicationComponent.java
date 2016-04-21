@@ -7,4 +7,6 @@ import javax.inject.Singleton;
 @Singleton @Component(modules = ApplicationModule.class) public interface ApplicationComponent {
 
   SettingsComponent getSettingsComponent();
+
+  MainActivityComponent getMainActivityComponent();
 }

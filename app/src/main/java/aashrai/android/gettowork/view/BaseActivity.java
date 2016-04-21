@@ -1,4 +1,4 @@
-package aashrai.android.gettowork;
+package aashrai.android.gettowork.view;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;

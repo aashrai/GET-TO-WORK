@@ -12,6 +12,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
@@ -25,16 +26,21 @@ import rx.subscriptions.CompositeSubscription;
 
   private final Context context;
   private final SharedPreferences preferences;
+  private final Set<String> activatedPackages;
   private SettingsView settingsView;
   private List<ApplicationInfo> packageList;
   private final CompositeSubscription compositeSubscription;
   private Subscription searchSubscription;
+  private static final String TAG = "SettingsPresenter";
 
   @Inject public SettingsActivityPresenter(Context context, SharedPreferences preferences) {
     this.context = context;
     this.preferences = preferences;
     compositeSubscription = new CompositeSubscription();
     packageList = new ArrayList<>();
+    //A copy is created because of a bug in android see issue 27801
+    activatedPackages = new HashSet<>(
+        preferences.getStringSet(Constants.ACTIVATED_PACKAGES, new HashSet<String>()));
   }
 
   public void setView(SettingsView settingsView) {
@@ -49,8 +55,7 @@ import rx.subscriptions.CompositeSubscription;
 
   private PackageListAdapter createPackageAdapter(List<ApplicationInfo> applicationInfoList) {
     packageList.addAll(applicationInfoList);
-    return new PackageListAdapter(applicationInfoList,
-        preferences.getStringSet(Constants.ACTIVATED_PACKAGES, new HashSet<String>()),
+    return new PackageListAdapter(applicationInfoList, activatedPackages,
         context.getPackageManager());
   }
 
@@ -78,14 +83,15 @@ import rx.subscriptions.CompositeSubscription;
     compositeSubscription.add(searchSubscription);
   }
 
-  private Subscription performSearch(final String query) {
+  private Subscription performSearch(String query) {
+    final String modifiedQuery = query.toLowerCase().trim();
     return Observable.from(packageList)
         .filter(new Func1<ApplicationInfo, Boolean>() {
           @Override public Boolean call(ApplicationInfo applicationInfo) {
-            return query.isEmpty() || applicationInfo.loadLabel(context.getPackageManager())
+            return modifiedQuery.isEmpty() || applicationInfo.loadLabel(context.getPackageManager())
                 .toString()
                 .toLowerCase()
-                .contains(query.toLowerCase());
+                .contains(modifiedQuery);
           }
         })
         .toList()
@@ -124,5 +130,10 @@ import rx.subscriptions.CompositeSubscription;
     @Override public void onNext(List<ApplicationInfo> applicationInfoList) {
       settingsView.updatePackageListAdapter(applicationInfoList);
     }
+  }
+
+  public void onBackPressed() {
+    //Log.d(TAG, "onBackPressed() " + activatedPackages);
+    preferences.edit().putStringSet(Constants.ACTIVATED_PACKAGES, activatedPackages).apply();
   }
 }

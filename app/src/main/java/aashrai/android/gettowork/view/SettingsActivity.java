@@ -1,9 +1,9 @@
-package aashrai.android.gettowork;
+package aashrai.android.gettowork.view;
 
+import aashrai.android.gettowork.GoToWorkApplication;
+import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.adapter.PackageListAdapter;
 import aashrai.android.gettowork.presenter.SettingsActivityPresenter;
-import aashrai.android.gettowork.view.SettingsView;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -91,11 +91,16 @@ public class SettingsActivity extends BaseActivity
 
   @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
     if (actionId == EditorInfo.IME_ACTION_DONE) {
-      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
       imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
       return true;
     }
     return false;
+  }
+
+  @Override public void onBackPressed() {
+    super.onBackPressed();
+    presenter.onBackPressed();
   }
 }
 
