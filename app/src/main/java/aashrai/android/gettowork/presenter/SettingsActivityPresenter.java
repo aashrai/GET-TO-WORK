@@ -3,6 +3,7 @@ package aashrai.android.gettowork.presenter;
 import aashrai.android.gettowork.Constants;
 import aashrai.android.gettowork.adapter.PackageListAdapter;
 import aashrai.android.gettowork.di.SettingsScope;
+import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.SettingsView;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -45,10 +46,14 @@ import rx.subscriptions.CompositeSubscription;
 
   public void setView(SettingsView settingsView) {
     this.settingsView = settingsView;
-    Subscription subscription = Observable.just(
+    Subscription subscription = Observable.from(
         context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
+        .filter(Utils.removeSelfPackage(context))
+        .filter(Utils.removeLaunchers(context))
+        .filter(Utils.removeSystemApps(context))
+        .toSortedList(Utils.getApplicationSortFunction(context))
         .subscribe(this);
     compositeSubscription.add(subscription);
   }
@@ -142,10 +147,5 @@ import rx.subscriptions.CompositeSubscription;
     @Override public void onNext(List<ApplicationInfo> applicationInfoList) {
       settingsView.updatePackageListAdapter(applicationInfoList);
     }
-  }
-
-  public void onBackPressed() {
-    //Log.d(TAG, "onBackPressed() " + activatedPackages);
-    preferences.edit().putStringSet(Constants.ACTIVATED_PACKAGES, activatedPackages).apply();
   }
 }
