@@ -106,11 +106,6 @@ public class SettingsActivity extends BaseActivity
     }
     return false;
   }
-
-  @Override public void onBackPressed() {
-    super.onBackPressed();
-    presenter.onBackPressed();
-  }
 }
 
 

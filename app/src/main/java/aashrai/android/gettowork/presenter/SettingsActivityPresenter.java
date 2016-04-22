@@ -22,7 +22,8 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-@SettingsScope public class SettingsActivityPresenter extends Subscriber<List<ApplicationInfo>> {
+@SettingsScope public class SettingsActivityPresenter extends Subscriber<List<ApplicationInfo>>
+    implements PackageListAdapter.onPackageToggleListener {
 
   private final Context context;
   private final SharedPreferences preferences;
@@ -54,8 +55,10 @@ import rx.subscriptions.CompositeSubscription;
 
   private PackageListAdapter createPackageAdapter(List<ApplicationInfo> applicationInfoList) {
     packageList.addAll(applicationInfoList);
-    return new PackageListAdapter(applicationInfoList, activatedPackages,
-        context.getPackageManager());
+    PackageListAdapter packageListAdapter =
+        new PackageListAdapter(applicationInfoList, activatedPackages, context.getPackageManager());
+    packageListAdapter.setPackageToggleListener(this);
+    return packageListAdapter;
   }
 
   @Override public void onStart() {
@@ -101,6 +104,15 @@ import rx.subscriptions.CompositeSubscription;
 
   public void onDestroy() {
     compositeSubscription.unsubscribe();
+  }
+
+  @Override public void onPackageToggle(String packageName, boolean activated) {
+    if (activated) {
+      activatedPackages.add(packageName);
+    } else {
+      activatedPackages.remove(packageName);
+    }
+    preferences.edit().putStringSet(Constants.ACTIVATED_PACKAGES, activatedPackages).apply();
   }
 
   public static class SearchSubscription extends Subscriber<List<ApplicationInfo>> {

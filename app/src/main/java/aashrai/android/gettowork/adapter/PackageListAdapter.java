@@ -31,6 +31,15 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
     //Log.d(TAG, "PackageListAdapter: activated packages " + activatedPackages);
   }
 
+  public interface onPackageToggleListener {
+    void onPackageToggle(String packageName, boolean activated);
+  }
+  onPackageToggleListener packageToggleListener;
+
+  public void setPackageToggleListener(onPackageToggleListener packageToggleListener) {
+    this.packageToggleListener = packageToggleListener;
+  }
+
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
     holder.packageName.setText(packageList.get(position).loadLabel(packageManager));
     holder.packageName.setChecked(
@@ -77,11 +86,7 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
 
     @OnCheckedChanged(R.id.sw_activate) public void activateForPackage(boolean flag) {
       String packageName = packageList.get(getAdapterPosition()).packageName;
-      if (flag) {
-        activatedPackages.add(packageName);
-      } else {
-        activatedPackages.remove(packageName);
-      }
+      packageToggleListener.onPackageToggle(packageName,flag);
     }
   }
 }
