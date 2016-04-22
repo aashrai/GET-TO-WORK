@@ -32,7 +32,7 @@ import javax.inject.Inject;
   }
 
   public void onAppLockActivateClick() {
-    boolean appLockActivate = sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false);
+    boolean appLockActivate = Utils.isAppLockActivated(sharedPreferences);
 
     if (!appLockActivate) {
       sharedPreferences.edit().putBoolean(Constants.APP_LOCK_ACTIVATED, true).apply();
@@ -53,7 +53,16 @@ import javax.inject.Inject;
     sharedPreferences.edit().putBoolean(Constants.APP_LOCK_ACTIVATED, false).apply();
     storeTiming(timing);
     mainActivityView.showToast(Constants.OVERLAY_DEACTIVATED_MESSAGE);
+    restoreToDefault();
     launchHomeScreen();
+  }
+
+  private void restoreToDefault() {
+    mainActivityView.hideTimingGrid();
+    mainActivityView.showActivateButton();
+    mainActivityView.showActivateHeader();
+    mainActivityView.setActivateDrawable(
+        ContextCompat.getDrawable(context, R.drawable.ic_play_circle));
   }
 
   void storeTiming(String timing) {

@@ -23,9 +23,8 @@ public class OverlayService extends AccessibilityService {
   @Override public void onAccessibilityEvent(AccessibilityEvent event) {
     Set<String> activatedPackages =
         sharedPreferences.getStringSet(Constants.ACTIVATED_PACKAGES, new HashSet<String>());
-    boolean appLockActivated = sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false);
-    if ((appLockActivated || Utils.isAppLockDeactivationExpired(sharedPreferences))
-        && activatedPackages.contains(event.getPackageName().toString())) {
+    if (Utils.isAppLockActivated(sharedPreferences) && activatedPackages.contains(
+        event.getPackageName().toString())) {
       Log.d(TAG, "onAccessibilityEvent() called with: " + "event = [" + event + "]");
       launchAppLock();
     }

@@ -22,4 +22,9 @@ public class Utils {
     long timestamp = sharedPreferences.getLong(Constants.OVERLAY_DEACTIVATED_TIMESTAMP, 0L);
     return timestamp + millis < System.currentTimeMillis();
   }
+
+  public static boolean isAppLockActivated(SharedPreferences sharedPreferences) {
+    return sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false)
+        || isAppLockDeactivationExpired(sharedPreferences);
+  }
 }

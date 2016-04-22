@@ -23,6 +23,8 @@ public interface MainActivityView {
 
   void hideActivateHeader();
 
+  void showActivateHeader();
+
   void hideTimingGrid();
 
   void showActivateButton();

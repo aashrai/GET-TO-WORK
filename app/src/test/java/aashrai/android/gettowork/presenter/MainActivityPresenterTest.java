@@ -108,6 +108,9 @@ public class MainActivityPresenterTest {
     mainActivityPresenter.onTimingClick("3 min");
     verify(mainActivityView).showToast(Constants.OVERLAY_DEACTIVATED_MESSAGE);
     verify(mainActivityView).launchActivity(Utils.getHomeScreenIntent());
+    verify(mainActivityView).hideTimingGrid();
+    verify(mainActivityView).showActivateButton();
+    verify(mainActivityView).showActivateHeader();
   }
 
   @Test public void testStoreTiming() throws Exception {

@@ -1,9 +1,9 @@
 package aashrai.android.gettowork.view.activity;
 
-import aashrai.android.gettowork.Constants;
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.TimingGridDecorator;
+import aashrai.android.gettowork.Utils;
 import aashrai.android.gettowork.adapter.TimingGridAdapter;
 import aashrai.android.gettowork.presenter.MainActivityPresenter;
 import aashrai.android.gettowork.view.MainActivityView;
@@ -84,9 +84,10 @@ public class MainActivity extends BaseActivity
   }
 
   private void setActivateDrawable() {
-    activate.setImageDrawable(sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false)
-        ? ContextCompat.getDrawable(this, R.drawable.ic_pause_circle)
-        : ContextCompat.getDrawable(this, R.drawable.ic_play_circle));
+    activate.setImageDrawable(
+        Utils.isAppLockActivated(sharedPreferences) ? ContextCompat.getDrawable(this,
+            R.drawable.ic_pause_circle)
+            : ContextCompat.getDrawable(this, R.drawable.ic_play_circle));
   }
 
   @Override public void configureDagger() {
@@ -145,6 +146,10 @@ public class MainActivity extends BaseActivity
 
   @Override public void hideActivateHeader() {
     activateHeader.setVisibility(View.GONE);
+  }
+
+  @Override public void showActivateHeader() {
+    activateHeader.setVisibility(View.VISIBLE);
   }
 
   @Override public void hideTimingGrid() {
