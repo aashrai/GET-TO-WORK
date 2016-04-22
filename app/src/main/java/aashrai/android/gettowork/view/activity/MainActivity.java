@@ -3,9 +3,9 @@ package aashrai.android.gettowork.view.activity;
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.TimingGridDecorator;
-import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.adapter.TimingGridAdapter;
 import aashrai.android.gettowork.presenter.MainActivityPresenter;
+import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -122,6 +122,14 @@ public class MainActivity extends BaseActivity
 
   @Override public void setActivateDrawable(Drawable drawable) {
     activate.setImageDrawable(drawable);
+  }
+
+  @OnClick(R.id.tv_credits) public void onCreditTextClick() {
+    presenter.onCreditTextClick();
+  }
+
+  @OnClick(R.id.tv_github) public void onGithubClick() {
+    presenter.onGithubClick();
   }
 
   @Override public String getWarningText() {

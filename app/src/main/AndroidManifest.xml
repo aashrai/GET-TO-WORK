@@ -19,6 +19,7 @@
     </activity>
     <activity android:name=".view.activity.SettingsActivity"/>
     <activity android:name=".view.activity.AppLockActivity"/>
+    <activity android:name=".view.activity.CreditActivity"/>
 
     <service android:name=".OverlayService"
         android:label="\u2600 GO TO FUCKING WORK \u2600"

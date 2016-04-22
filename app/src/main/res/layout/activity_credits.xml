@@ -22,7 +22,7 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Large"
       android:gravity="center"
       android:id="@+id/tv_creditAlex"
-      android:text="\@\hialexlam"/>
+      android:text="\@hialexlam"/>
 
   <TextView android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -30,7 +30,8 @@
       android:layout_marginTop="@dimen/activity_vertical_margin"
       android:textAppearance="@style/TextAppearance.AppCompat.Large"
       android:gravity="center"
-      android:text="\@\aashrairavooru"/>
+      android:id="@+id/tv_creditsAash"
+      android:text="\@aashrairavooru"/>
 
 
 </RelativeLayout>

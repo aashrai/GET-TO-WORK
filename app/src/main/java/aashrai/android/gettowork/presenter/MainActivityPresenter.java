@@ -2,11 +2,14 @@ package aashrai.android.gettowork.presenter;
 
 import aashrai.android.gettowork.Constants;
 import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.di.MainActivityScope;
+import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
+import aashrai.android.gettowork.view.activity.CreditActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -115,5 +118,17 @@ import javax.inject.Inject;
 
   private void launchSettingsActivity() {
     mainActivityView.launchActivity(Utils.getSettingsActivityIntent(context));
+  }
+
+  public void onCreditTextClick() {
+    Intent intent = new Intent(context, CreditActivity.class);
+    mainActivityView.launchActivity(intent);
+  }
+
+  public void onGithubClick() {
+    Intent intent = new Intent();
+    intent.setAction(Intent.ACTION_VIEW);
+    intent.setData(Uri.parse("https://github.com/aashrairavooru/GET-TO-WORK"));
+    mainActivityView.launchActivity(intent);
   }
 }
