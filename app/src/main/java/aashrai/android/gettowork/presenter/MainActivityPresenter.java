@@ -2,7 +2,7 @@ package aashrai.android.gettowork.presenter;
 
 import aashrai.android.gettowork.Constants;
 import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.Utils;
+import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.di.MainActivityScope;
 import aashrai.android.gettowork.view.MainActivityView;
 import android.content.Context;

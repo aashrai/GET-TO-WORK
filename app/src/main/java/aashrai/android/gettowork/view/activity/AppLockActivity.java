@@ -2,7 +2,7 @@ package aashrai.android.gettowork.view.activity;
 
 import aashrai.android.gettowork.Constants;
 import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.Utils;
+import aashrai.android.gettowork.utils.Utils;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;

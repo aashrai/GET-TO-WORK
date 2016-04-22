@@ -56,7 +56,8 @@ import rx.subscriptions.CompositeSubscription;
   private PackageListAdapter createPackageAdapter(List<ApplicationInfo> applicationInfoList) {
     packageList.addAll(applicationInfoList);
     PackageListAdapter packageListAdapter =
-        new PackageListAdapter(applicationInfoList, activatedPackages, context.getPackageManager());
+        new PackageListAdapter(applicationInfoList, activatedPackages, context.getPackageManager(),
+            context);
     packageListAdapter.setPackageToggleListener(this);
     return packageListAdapter;
   }

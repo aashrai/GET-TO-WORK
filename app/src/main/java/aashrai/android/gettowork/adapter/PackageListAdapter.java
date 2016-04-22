@@ -1,6 +1,9 @@
 package aashrai.android.gettowork.adapter;
 
+import aashrai.android.gettowork.BuildConfig;
 import aashrai.android.gettowork.R;
+import aashrai.android.gettowork.utils.AppIconRequestHandler;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +15,7 @@ import android.widget.Switch;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
+import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Set;
 
@@ -20,13 +24,17 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
   private final List<ApplicationInfo> packageList;
   private final Set<String> activatedPackages;
   private final PackageManager packageManager;
+  private final Picasso picasso;
   private static final String TAG = "PackageListAdapter";
 
   public PackageListAdapter(List<ApplicationInfo> packageList, Set<String> activatedPackages,
-      PackageManager packageManager) {
+      PackageManager packageManager, Context context) {
     this.packageList = packageList;
     this.activatedPackages = activatedPackages;
     this.packageManager = packageManager;
+    picasso = new Picasso.Builder(context).indicatorsEnabled(BuildConfig.DEBUG)
+        .addRequestHandler(new AppIconRequestHandler(context))
+        .build();
 
     //Log.d(TAG, "PackageListAdapter: activated packages " + activatedPackages);
   }
@@ -34,6 +42,7 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
   public interface onPackageToggleListener {
     void onPackageToggle(String packageName, boolean activated);
   }
+
   onPackageToggleListener packageToggleListener;
 
   public void setPackageToggleListener(onPackageToggleListener packageToggleListener) {
@@ -41,10 +50,10 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    holder.packageName.setText(packageList.get(position).loadLabel(packageManager));
-    holder.packageName.setChecked(
-        activatedPackages.contains(packageList.get(position).packageName));
-    holder.thumbnail.setImageDrawable(packageList.get(position).loadIcon(packageManager));
+    String packageName = packageList.get(position).packageName;
+    holder.packageName.setText(packageManager.getApplicationLabel(packageList.get(position)));
+    holder.packageName.setChecked(activatedPackages.contains(packageName));
+    picasso.load(AppIconRequestHandler.getUri(packageName)).noFade().into(holder.thumbnail);
   }
 
   @Override public int getItemCount() {
@@ -86,7 +95,7 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
 
     @OnCheckedChanged(R.id.sw_activate) public void activateForPackage(boolean flag) {
       String packageName = packageList.get(getAdapterPosition()).packageName;
-      packageToggleListener.onPackageToggle(packageName,flag);
+      packageToggleListener.onPackageToggle(packageName, flag);
     }
   }
 }

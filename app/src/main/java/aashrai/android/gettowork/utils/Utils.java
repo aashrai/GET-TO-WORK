@@ -1,5 +1,6 @@
-package aashrai.android.gettowork;
+package aashrai.android.gettowork.utils;
 
+import aashrai.android.gettowork.Constants;
 import aashrai.android.gettowork.view.activity.SettingsActivity;
 import android.content.Context;
 import android.content.Intent;

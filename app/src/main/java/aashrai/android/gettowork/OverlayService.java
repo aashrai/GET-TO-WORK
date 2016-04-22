@@ -1,5 +1,6 @@
 package aashrai.android.gettowork;
 
+import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.activity.AppLockActivity;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
