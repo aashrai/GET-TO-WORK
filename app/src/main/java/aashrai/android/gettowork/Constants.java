@@ -16,4 +16,9 @@ public class Constants {
 
   public static final String PAUSE_WARNING_MESSAGE_FIRST = "ARE YOU FUCKING SURE?!";
   public static final String PAUSE_WARNING_MESSAGE_SECOND = "YOU SHOULD WORK";
+  public static final String[] FUCK_OFF_MESSAGES = new String[] {
+      "YOU ARE GOING TO DIE SOON. WORK.", "FUCK YOU. WORK.", "WHAT THE FUCK? WORK.",
+      "REMEMBER WORK? FUCKING DO IT.", "GO FUCKING WORK.", "YOU LOSER. FUCKING WORK.",
+      "WORK YOU FUCKING FAILURE."
+  };
 }

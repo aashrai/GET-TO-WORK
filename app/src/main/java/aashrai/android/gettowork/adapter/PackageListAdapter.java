@@ -4,7 +4,6 @@ import aashrai.android.gettowork.R;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
     this.activatedPackages = activatedPackages;
     this.packageManager = packageManager;
 
-    Log.d(TAG, "PackageListAdapter: activated packages " + activatedPackages);
+    //Log.d(TAG, "PackageListAdapter: activated packages " + activatedPackages);
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {

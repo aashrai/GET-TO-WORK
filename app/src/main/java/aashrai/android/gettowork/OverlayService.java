@@ -5,7 +5,6 @@ import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,7 +24,7 @@ public class OverlayService extends AccessibilityService {
         sharedPreferences.getStringSet(Constants.ACTIVATED_PACKAGES, new HashSet<String>());
     if (Utils.isAppLockActivated(sharedPreferences) && activatedPackages.contains(
         event.getPackageName().toString())) {
-      Log.d(TAG, "onAccessibilityEvent() called with: " + "event = [" + event + "]");
+      //Log.d(TAG, "onAccessibilityEvent() called with: " + "event = [" + event + "]");
       launchAppLock();
     }
   }

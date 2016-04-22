@@ -18,9 +18,9 @@ public class Utils {
   }
 
   public static boolean isAppLockDeactivationExpired(SharedPreferences sharedPreferences) {
-    long millis = sharedPreferences.getLong(Constants.OVERLAY_DEACTIVATED_MILLIS, 0L);
-    long timestamp = sharedPreferences.getLong(Constants.OVERLAY_DEACTIVATED_TIMESTAMP, 0L);
-    return timestamp + millis < System.currentTimeMillis();
+    long millis = sharedPreferences.getLong(Constants.OVERLAY_DEACTIVATED_MILLIS, -1L);
+    long timestamp = sharedPreferences.getLong(Constants.OVERLAY_DEACTIVATED_TIMESTAMP, -1L);
+    return millis != -1L && timestamp + millis < System.currentTimeMillis();
   }
 
   public static boolean isAppLockActivated(SharedPreferences sharedPreferences) {

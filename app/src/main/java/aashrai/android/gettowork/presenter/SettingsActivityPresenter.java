@@ -31,7 +31,6 @@ import rx.subscriptions.CompositeSubscription;
   private List<ApplicationInfo> packageList;
   private final CompositeSubscription compositeSubscription;
   private Subscription searchSubscription;
-  private static final String TAG = "SettingsPresenter";
 
   @Inject public SettingsActivityPresenter(Context context, SharedPreferences preferences) {
     this.context = context;
