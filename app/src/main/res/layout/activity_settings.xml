@@ -44,7 +44,8 @@
       android:textAppearance="@style/TextAppearance.AppCompat.Medium"
       android:text="ADVANCED FUCKING OPTIONS"
       android:drawableEnd="@drawable/ic_arrow_forward"
-      android:id="@+id/tv_advSettings"/>
+      android:id="@+id/tv_advSettings"
+      android:visibility="gone"/>
 
   <ProgressBar android:layout_width="64dp"
       android:layout_height="64dp"
