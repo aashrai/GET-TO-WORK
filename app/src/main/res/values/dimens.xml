@@ -7,5 +7,5 @@
   <dimen name="activate_icon_size">150dp</dimen>
   <dimen name="timing_grid_size">200dp</dimen>
   <dimen name="timing_grid_size_half">100dp</dimen>
-  <dimen name="timing_grid_spacing">5dp</dimen>
+  <dimen name="standard_spacing">5dp</dimen>
 </resources>

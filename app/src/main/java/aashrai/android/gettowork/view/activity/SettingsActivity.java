@@ -1,5 +1,6 @@
 package aashrai.android.gettowork.view.activity;
 
+import aashrai.android.gettowork.AppListDecorator;
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.adapter.PackageListAdapter;
@@ -54,8 +55,7 @@ public class SettingsActivity extends BaseActivity
         .subscribe(this));
   }
 
-  @Override
-  public void configureDagger() {
+  @Override public void configureDagger() {
     ((GoToWorkApplication) getApplication()).getApplicationComponent()
         .getSettingsComponent()
         .inject(this);
@@ -68,6 +68,7 @@ public class SettingsActivity extends BaseActivity
   @Override public void setPackageListAdapter(PackageListAdapter adapter) {
     this.adapter = adapter;
     packageList.setLayoutManager(new LinearLayoutManager(this));
+    packageList.addItemDecoration(new AppListDecorator());
     packageList.setAdapter(this.adapter);
   }
 

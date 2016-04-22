@@ -13,8 +13,7 @@ public class TimingGridDecorator extends RecyclerView.ItemDecoration {
       RecyclerView.State state) {
     super.getItemOffsets(outRect, view, parent, state);
     int position = parent.getChildAdapterPosition(view);
-    int spacing =
-        parent.getContext().getResources().getDimensionPixelOffset(R.dimen.timing_grid_spacing);
+    int spacing = parent.getResources().getDimensionPixelOffset(R.dimen.standard_spacing);
     if (position != 0) outRect.top = spacing;
     switch (position) {
       case 6:

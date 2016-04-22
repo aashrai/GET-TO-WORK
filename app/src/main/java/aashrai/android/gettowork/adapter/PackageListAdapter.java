@@ -1,6 +1,5 @@
 package aashrai.android.gettowork.adapter;
 
-import aashrai.android.gettowork.BuildConfig;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.utils.AppIconRequestHandler;
 import android.content.Context;
@@ -32,9 +31,8 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
     this.packageList = packageList;
     this.activatedPackages = activatedPackages;
     this.packageManager = packageManager;
-    picasso = new Picasso.Builder(context).indicatorsEnabled(BuildConfig.DEBUG)
-        .addRequestHandler(new AppIconRequestHandler(context))
-        .build();
+    picasso =
+        new Picasso.Builder(context).addRequestHandler(new AppIconRequestHandler(context)).build();
 
     //Log.d(TAG, "PackageListAdapter: activated packages " + activatedPackages);
   }
