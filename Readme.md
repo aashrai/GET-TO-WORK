@@ -18,6 +18,7 @@ Android port of the awesome chrome plugin [GO FUCKING WORK](goo.gl/EIYytN ) by [
 3. GitHub Screen.
 4. Remove self from list of apps.
 5. Remove system apps and launchers from list of apps.
+6. Publish to playstore.
 
 ## How to use
 Make sure you switch on the **Accessibility Service** for the app in the
