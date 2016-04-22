@@ -11,4 +11,9 @@ public class Constants {
   public static final String ADD_APPS_MESSAGE = "Add some FUCKING!! Apps";
   public static final String OVERLAY_ACTIVATED_MESSAGE = "The FUCKING!! App Lock is Activated";
   public static final String OVERLAY_DEACTIVATED_MESSAGE = "App Lock is FUCKING Deactivated";
+  public static final String OVERLAY_DEACTIVATED_MILLIS = "overlay_deactivated_message";
+  public static final String OVERLAY_DEACTIVATED_TIMESTAMP = "overlay_deactivated_timestamp";
+
+  public static final String PAUSE_WARNING_MESSAGE_FIRST = "ARE YOU FUCKING SURE?!";
+  public static final String PAUSE_WARNING_MESSAGE_SECOND = "YOU SHOULD WORK";
 }

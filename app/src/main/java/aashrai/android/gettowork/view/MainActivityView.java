@@ -10,4 +10,22 @@ public interface MainActivityView {
   void launchActivity(Intent intent);
 
   void setActivateDrawable(Drawable drawable);
+
+  String getWarningText();
+
+  void showWarningText();
+
+  void hideWarningText();
+
+  void setWarningText(String text);
+
+  void showTimingGrid();
+
+  void hideActivateHeader();
+
+  void hideTimingGrid();
+
+  void showActivateButton();
+
+  void hideActivateButton();
 }

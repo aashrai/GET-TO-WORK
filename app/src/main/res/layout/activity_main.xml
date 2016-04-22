@@ -34,6 +34,7 @@
       android:layout_height="wrap_content"
       android:layout_above="@+id/iv_activate"
       android:textAppearance="@style/TextAppearance.AppCompat.Large"
+      android:id="@+id/tv_activateHeader"
       android:gravity="center"
       android:text="Go Fucking Work.Nothing To See Here"/>
 
@@ -49,6 +50,11 @@
       android:layout_centerInParent="true"
       android:visibility="gone"
       tools:visibility="visible"
+      tools:text="YOU SHOULD WORK"
+      android:gravity="center"
+      android:textColor="@android:color/white"
+      android:textStyle="bold"
+      android:textAppearance="@style/TextAppearance.AppCompat.Display1"
       android:id="@+id/tv_pauseWarning"/>
 
   <android.support.v7.widget.RecyclerView

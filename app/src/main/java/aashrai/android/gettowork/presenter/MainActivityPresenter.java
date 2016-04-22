@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 @MainActivityScope public class MainActivityPresenter {
@@ -32,15 +33,57 @@ import javax.inject.Inject;
 
   public void onAppLockActivateClick() {
     boolean appLockActivate = sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false);
-    sharedPreferences.edit().putBoolean(Constants.APP_LOCK_ACTIVATED, !appLockActivate).apply();
 
     if (!appLockActivate) {
+      sharedPreferences.edit().putBoolean(Constants.APP_LOCK_ACTIVATED, true).apply();
       checkAndActivateAppLock();
     } else {
-      mainActivityView.setActivateDrawable(
-          ContextCompat.getDrawable(context, R.drawable.ic_play_circle));
-      mainActivityView.showToast(Constants.OVERLAY_DEACTIVATED_MESSAGE);
-      launchHomeScreen();
+      showWarning();
+    }
+  }
+
+  private void showWarning() {
+    mainActivityView.hideActivateButton();
+    mainActivityView.showWarningText();
+    mainActivityView.hideActivateHeader();
+    mainActivityView.setWarningText(Constants.PAUSE_WARNING_MESSAGE_FIRST);
+  }
+
+  public void onTimingClick(String timing) {
+    sharedPreferences.edit().putBoolean(Constants.APP_LOCK_ACTIVATED, false).apply();
+    storeTiming(timing);
+    mainActivityView.showToast(Constants.OVERLAY_DEACTIVATED_MESSAGE);
+    launchHomeScreen();
+  }
+
+  void storeTiming(String timing) {
+    long millis = getMillis(timing);
+    sharedPreferences.edit()
+        .putLong(Constants.OVERLAY_DEACTIVATED_TIMESTAMP, System.currentTimeMillis())
+        .apply();
+    sharedPreferences.edit().putLong(Constants.OVERLAY_DEACTIVATED_MILLIS, millis).apply();
+  }
+
+  long getMillis(String timing) {
+    String[] timeAndUnit = timing.split(" ");
+    String time = timeAndUnit[0];
+    String unit = timeAndUnit[1];
+    long millis = 0;
+    if (unit.toLowerCase().equals("min") || unit.toLowerCase().equals("mins")) {
+      millis = TimeUnit.MINUTES.toMillis(Long.valueOf(time));
+    } else if (unit.toLowerCase().equals("hr") || unit.toLowerCase().equals("hrs")) {
+      millis = TimeUnit.HOURS.toMillis(Long.valueOf(time));
+    }
+    return millis;
+  }
+
+  public void onWarningTextClick() {
+    String text = mainActivityView.getWarningText();
+    if (text.equals(Constants.PAUSE_WARNING_MESSAGE_FIRST)) {
+      mainActivityView.setWarningText(Constants.PAUSE_WARNING_MESSAGE_SECOND);
+    } else {
+      mainActivityView.hideWarningText();
+      mainActivityView.showTimingGrid();
     }
   }
 

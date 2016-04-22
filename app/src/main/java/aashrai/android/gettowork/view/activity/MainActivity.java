@@ -15,7 +15,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -30,6 +32,8 @@ public class MainActivity extends BaseActivity
   @Inject SharedPreferences sharedPreferences;
   @Bind(R.id.iv_activate) ImageView activate;
   @Bind(R.id.rv_timing_grid) RecyclerView timingsRecyclerView;
+  @Bind(R.id.tv_pauseWarning) TextView pauseWarning;
+  @Bind(R.id.tv_activateHeader) TextView activateHeader;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -119,7 +123,47 @@ public class MainActivity extends BaseActivity
     activate.setImageDrawable(drawable);
   }
 
-  @Override public void onTimingClick(String timing) {
+  @Override public String getWarningText() {
+    return pauseWarning.getText().toString();
+  }
 
+  @Override public void showWarningText() {
+    pauseWarning.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideWarningText() {
+    pauseWarning.setVisibility(View.GONE);
+  }
+
+  @Override public void setWarningText(String text) {
+    pauseWarning.setText(text);
+  }
+
+  @Override public void showTimingGrid() {
+    timingsRecyclerView.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideActivateHeader() {
+    activateHeader.setVisibility(View.GONE);
+  }
+
+  @Override public void hideTimingGrid() {
+    timingsRecyclerView.setVisibility(View.GONE);
+  }
+
+  @Override public void showActivateButton() {
+    activate.setVisibility(View.VISIBLE);
+  }
+
+  @Override public void hideActivateButton() {
+    activate.setVisibility(View.GONE);
+  }
+
+  @OnClick(R.id.tv_pauseWarning) public void onWarningTextClick() {
+    presenter.onWarningTextClick();
+  }
+
+  @Override public void onTimingClick(String timing) {
+    presenter.onTimingClick(timing);
   }
 }
