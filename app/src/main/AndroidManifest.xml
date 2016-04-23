@@ -22,7 +22,7 @@
     <activity android:name=".view.activity.CreditActivity"/>
 
     <service android:name=".OverlayService"
-        android:label="\u2600 GO TO FUCKING WORK \u2600"
+        android:label="@string/accessibility_name"
         android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
       <intent-filter>
         <action android:name="android.accessibilityservice.AccessibilityService"/>

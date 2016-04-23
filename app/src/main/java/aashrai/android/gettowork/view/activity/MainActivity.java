@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -170,6 +171,14 @@ public class MainActivity extends BaseActivity
 
   @Override public void hideActivateButton() {
     activate.setVisibility(View.GONE);
+  }
+
+  @Override public void showAccessibilityDialog() {
+    new AlertDialog.Builder(this).setTitle("Enable Accessibility")
+        .setMessage("This app requires accessibility permission for working properly")
+        .setPositiveButton("SURE", presenter)
+        .setCancelable(false)
+        .create().show();
   }
 
   @OnClick(R.id.tv_pauseWarning) public void onWarningTextClick() {

@@ -10,7 +10,6 @@ import rx.functions.Func1;
 import rx.functions.Func2;
 
 public class Utils {
-
   public static Intent getHomeScreenIntent() {
     Intent intent = new Intent(Intent.ACTION_MAIN);
     intent.addCategory(Intent.CATEGORY_HOME);

@@ -30,4 +30,6 @@ public interface MainActivityView {
   void showActivateButton();
 
   void hideActivateButton();
+
+  void showAccessibilityDialog();
 }

@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,6 +34,7 @@ import rx.subscriptions.CompositeSubscription;
   private List<ApplicationInfo> packageList;
   private final CompositeSubscription compositeSubscription;
   private Subscription searchSubscription;
+  private static final String TAG = "SettingsActivity";
 
   @Inject public SettingsActivityPresenter(Context context, SharedPreferences preferences) {
     this.context = context;
@@ -46,6 +48,7 @@ import rx.subscriptions.CompositeSubscription;
 
   public void setView(SettingsView settingsView) {
     this.settingsView = settingsView;
+
     Subscription subscription = Observable.from(
         context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
         .subscribeOn(Schedulers.io())
@@ -81,6 +84,7 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @Override public void onNext(List<ApplicationInfo> applicationInfoList) {
+    Log.d(TAG, "onNext() called with: " + "applicationInfoList " + applicationInfoList.size());
     settingsView.setPackageListAdapter(createPackageAdapter(applicationInfoList));
   }
 
@@ -96,7 +100,8 @@ import rx.subscriptions.CompositeSubscription;
     return Observable.from(packageList)
         .filter(new Func1<ApplicationInfo, Boolean>() {
           @Override public Boolean call(ApplicationInfo applicationInfo) {
-            return modifiedQuery.isEmpty() || applicationInfo.loadLabel(context.getPackageManager())
+            return modifiedQuery.isEmpty() || context.getPackageManager()
+                .getApplicationLabel(applicationInfo)
                 .toString()
                 .toLowerCase()
                 .contains(modifiedQuery);

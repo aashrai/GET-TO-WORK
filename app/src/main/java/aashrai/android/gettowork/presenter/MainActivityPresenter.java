@@ -7,15 +7,17 @@ import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
 import aashrai.android.gettowork.view.activity.CreditActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
-@MainActivityScope public class MainActivityPresenter {
+@MainActivityScope public class MainActivityPresenter implements DialogInterface.OnClickListener {
 
   private final Set<String> activatedPackages;
   private final SharedPreferences sharedPreferences;
@@ -32,6 +34,19 @@ import javax.inject.Inject;
 
   public void setView(MainActivityView mainActivityView) {
     this.mainActivityView = mainActivityView;
+    try {
+      checkAccessibilityEnabled();
+    } catch (Settings.SettingNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void checkAccessibilityEnabled() throws Settings.SettingNotFoundException {
+    int enabled =
+        Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.ACCESSIBILITY_ENABLED);
+    if (enabled == 0) {
+      mainActivityView.showAccessibilityDialog();
+    }
   }
 
   public void onAppLockActivateClick() {
@@ -130,5 +145,12 @@ import javax.inject.Inject;
     intent.setAction(Intent.ACTION_VIEW);
     intent.setData(Uri.parse("https://github.com/aashrairavooru/GET-TO-WORK"));
     mainActivityView.launchActivity(intent);
+  }
+
+  @Override public void onClick(DialogInterface dialog, int which) {
+    Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+    mainActivityView.launchActivity(intent);
+    mainActivityView.showToast(String.format("Enable for %s",
+        context.getResources().getString(R.string.accessibility_name)));
   }
 }

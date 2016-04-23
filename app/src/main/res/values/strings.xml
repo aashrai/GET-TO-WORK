@@ -1,3 +1,6 @@
 <resources>
-    <string name="app_name">GetToWork</string>
+  <string name="app_name">GetToWork</string>
+  <string name="accessibility_name">\u2600 GET TO WORK \u2600</string>
+  <string name="accessibility_desc">Enable this to stop procrastinating and do some FUCKING WORK!!
+  </string>
 </resources>
