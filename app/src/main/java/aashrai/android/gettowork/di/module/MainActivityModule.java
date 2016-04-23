@@ -1,6 +1,6 @@
 package aashrai.android.gettowork.di.module;
 
-import aashrai.android.gettowork.Constants;
+import aashrai.android.gettowork.utils.Constants;
 import aashrai.android.gettowork.di.MainActivityScope;
 import android.content.SharedPreferences;
 import dagger.Module;

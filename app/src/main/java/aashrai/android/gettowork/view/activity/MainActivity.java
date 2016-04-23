@@ -2,7 +2,7 @@ package aashrai.android.gettowork.view.activity;
 
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.TimingGridDecorator;
+import aashrai.android.gettowork.utils.TimingGridDecorator;
 import aashrai.android.gettowork.adapter.TimingGridAdapter;
 import aashrai.android.gettowork.presenter.MainActivityPresenter;
 import aashrai.android.gettowork.utils.Utils;

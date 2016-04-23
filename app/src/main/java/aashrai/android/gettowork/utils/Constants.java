@@ -1,4 +1,4 @@
-package aashrai.android.gettowork;
+package aashrai.android.gettowork.utils;
 
 public class Constants {
 

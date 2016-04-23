@@ -1,6 +1,6 @@
 package aashrai.android.gettowork.view.activity;
 
-import aashrai.android.gettowork.AppListDecorator;
+import aashrai.android.gettowork.utils.AppListDecorator;
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.adapter.PackageListAdapter;

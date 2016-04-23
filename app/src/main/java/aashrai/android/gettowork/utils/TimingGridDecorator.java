@@ -1,5 +1,6 @@
-package aashrai.android.gettowork;
+package aashrai.android.gettowork.utils;
 
+import aashrai.android.gettowork.R;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
