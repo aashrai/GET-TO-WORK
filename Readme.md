@@ -13,12 +13,11 @@ Android port of the awesome chrome plugin [GO FUCKING WORK](goo.gl/EIYytN ) by [
 ![ScreenShot2](./art/timinggrid_screenshot.png)
 
 # TODO
-1. An In app floating guide to switch on the Accessibility Service for the app.
-2. Publish to playstore.
+1. Publish to playstore.
 
 ## How to use
 Make sure you switch on the **Accessibility Service** for the app in the
-accessibility menu. An in app floating guide for the same is coming soon.
+accessibility menu.
 
 ## How does it work
 The app uses an **Accessibility Service** to track the currently launched app and launches an app lock with an abusive message to *inspire* you to go back to work
