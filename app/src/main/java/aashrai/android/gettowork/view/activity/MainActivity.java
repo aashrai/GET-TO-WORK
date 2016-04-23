@@ -2,9 +2,10 @@ package aashrai.android.gettowork.view.activity;
 
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.utils.TimingGridDecorator;
 import aashrai.android.gettowork.adapter.TimingGridAdapter;
+import aashrai.android.gettowork.di.component.MainActivityComponent;
 import aashrai.android.gettowork.presenter.MainActivityPresenter;
+import aashrai.android.gettowork.utils.TimingGridDecorator;
 import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
 import android.content.Intent;
@@ -35,6 +36,7 @@ public class MainActivity extends BaseActivity
   @Bind(R.id.rv_timing_grid) RecyclerView timingsRecyclerView;
   @Bind(R.id.tv_pauseWarning) TextView pauseWarning;
   @Bind(R.id.tv_activateHeader) TextView activateHeader;
+  MainActivityComponent mainActivityComponent;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -92,9 +94,9 @@ public class MainActivity extends BaseActivity
   }
 
   @Override public void configureDagger() {
-    ((GoToWorkApplication) getApplication()).getApplicationComponent()
-        .getMainActivityComponent()
-        .inject(this);
+    mainActivityComponent = ((GoToWorkApplication) getApplication()).getApplicationComponent()
+        .getMainActivityComponent();
+    mainActivityComponent.inject(this);
   }
 
   @OnClick(R.id.iv_activate) public void onActivate() {
@@ -178,7 +180,8 @@ public class MainActivity extends BaseActivity
         .setMessage("This app requires accessibility permission for working properly")
         .setPositiveButton("SURE", presenter)
         .setCancelable(false)
-        .create().show();
+        .create()
+        .show();
   }
 
   @OnClick(R.id.tv_pauseWarning) public void onWarningTextClick() {
@@ -187,5 +190,10 @@ public class MainActivity extends BaseActivity
 
   @Override public void onTimingClick(String timing) {
     presenter.onTimingClick(timing);
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    mainActivityComponent = null;
   }
 }

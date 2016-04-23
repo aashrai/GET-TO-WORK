@@ -1,10 +1,11 @@
 package aashrai.android.gettowork.view.activity;
 
-import aashrai.android.gettowork.utils.AppListDecorator;
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.adapter.PackageListAdapter;
+import aashrai.android.gettowork.di.component.SettingsComponent;
 import aashrai.android.gettowork.presenter.SettingsActivityPresenter;
+import aashrai.android.gettowork.utils.AppListDecorator;
 import aashrai.android.gettowork.view.SettingsView;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class SettingsActivity extends BaseActivity
   CompositeSubscription compositeSubscription;
   boolean firstSearchFlag = true;
   private static final String TAG = "SettingsActivity";
+  SettingsComponent settingsComponent;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -56,9 +58,9 @@ public class SettingsActivity extends BaseActivity
   }
 
   @Override public void configureDagger() {
-    ((GoToWorkApplication) getApplication()).getApplicationComponent()
-        .getSettingsComponent()
-        .inject(this);
+    settingsComponent =
+        ((GoToWorkApplication) getApplication()).getApplicationComponent().getSettingsComponent();
+    settingsComponent.inject(this);
   }
 
   @Override public int getLayoutId() {
@@ -97,6 +99,7 @@ public class SettingsActivity extends BaseActivity
     super.onDestroy();
     compositeSubscription.unsubscribe();
     presenter.onDestroy();
+    settingsComponent = null;
   }
 
   @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
