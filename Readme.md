@@ -14,9 +14,7 @@ Android port of the awesome chrome plugin [GO FUCKING WORK](goo.gl/EIYytN ) by [
 
 # TODO
 1. An In app floating guide to switch on the Accessibility Service for the app.
-2. Remove self from list of apps.
-3. Remove system apps and launchers from list of apps.
-4. Publish to playstore.
+2. Publish to playstore.
 
 ## How to use
 Make sure you switch on the **Accessibility Service** for the app in the
