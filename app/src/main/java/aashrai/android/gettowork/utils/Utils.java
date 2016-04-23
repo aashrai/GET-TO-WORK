@@ -65,9 +65,7 @@ public class Utils {
   public static Func1<? super ApplicationInfo, Boolean> removeSystemApps(final Context context) {
     return new Func1<ApplicationInfo, Boolean>() {
       @Override public Boolean call(ApplicationInfo applicationInfo) {
-        return !applicationInfo.loadLabel(context.getPackageManager())
-            .toString()
-            .startsWith("com.android");
+        return (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
       }
     };
   }
