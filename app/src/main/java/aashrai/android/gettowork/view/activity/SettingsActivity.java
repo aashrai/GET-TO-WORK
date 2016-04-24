@@ -10,6 +10,7 @@ import aashrai.android.gettowork.view.SettingsView;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -49,6 +50,8 @@ public class SettingsActivity extends BaseActivity
   }
 
   private void configureSearch() {
+   search.setCompoundDrawables(null, null,
+       ContextCompat.getDrawable(this, R.drawable.ic_search), null);
     search.setOnEditorActionListener(this);
     compositeSubscription = new CompositeSubscription();
     compositeSubscription.add(RxTextView.textChanges(search)
