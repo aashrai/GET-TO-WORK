@@ -1,8 +1,17 @@
-*.iml
-.gradle
+keystore.properties
+*.keystore
+
+#Android generated
+bin
+gen
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
-.DS_Store
-/build
 /captures
+
+#IntelliJ IDEA
+.idea
+*.iml
+
+#Gradle
+.gradle
+build
+gradle.properties
