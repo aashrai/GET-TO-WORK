@@ -22,7 +22,6 @@
       android:textColor="@android:color/white"
       tools:text="Facebook"
       android:theme="@style/EditTextTheme"
-      android:drawableRight="@drawable/ic_search"
       android:id="@+id/et_search"
       android:inputType="text"
       android:imeOptions="actionDone"/>
