@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.support.graphics.drawable.VectorDrawableCompat;
-
 import rx.functions.Func1;
 import rx.functions.Func2;
 
@@ -70,9 +68,5 @@ public class Utils {
         return (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
       }
     };
-  }
-
-  public static VectorDrawableCompat createVectorDrawable(final Context context, int resourceId) {
-    return VectorDrawableCompat.create(context.getResources(), resourceId, context.getTheme());
   }
 }

@@ -8,12 +8,12 @@ import aashrai.android.gettowork.presenter.MainActivityPresenter;
 import aashrai.android.gettowork.utils.TimingGridDecorator;
 import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,7 +41,6 @@ public class MainActivity extends BaseActivity
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     presenter.setView(this);
-    presenter.checkAccessibilityEnabled();
     setActivateDrawable();
     configureTimingsRecyclerView();
   }
@@ -89,9 +88,9 @@ public class MainActivity extends BaseActivity
 
   private void setActivateDrawable() {
     activate.setImageDrawable(
-        Utils.isAppLockActivated(sharedPreferences) ? Utils.createVectorDrawable(this,
+        Utils.isAppLockActivated(sharedPreferences) ? ContextCompat.getDrawable(this,
             R.drawable.ic_pause_circle)
-            : Utils.createVectorDrawable(this, R.drawable.ic_play_circle));
+            : ContextCompat.getDrawable(this, R.drawable.ic_play_circle));
   }
 
   @Override public void configureDagger() {
@@ -183,10 +182,6 @@ public class MainActivity extends BaseActivity
         .setCancelable(false)
         .create()
         .show();
-  }
-
-  @Override public Context getActivityContext() {
-    return this;
   }
 
   @OnClick(R.id.tv_pauseWarning) public void onWarningTextClick() {

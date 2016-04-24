@@ -1,9 +1,8 @@
 package aashrai.android.gettowork.presenter;
 
+import aashrai.android.gettowork.utils.Constants;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.di.MainActivityScope;
-import aashrai.android.gettowork.utils.AccessibilityChecker;
-import aashrai.android.gettowork.utils.Constants;
 import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
 import aashrai.android.gettowork.view.activity.CreditActivity;
@@ -13,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.provider.Settings;
+import android.support.v4.content.ContextCompat;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -22,24 +22,29 @@ import javax.inject.Inject;
   private final Set<String> activatedPackages;
   private final SharedPreferences sharedPreferences;
   private final Context context;
-  private final AccessibilityChecker accessibilityChecker;
   private MainActivityView mainActivityView;
 
   @Inject
   public MainActivityPresenter(Set<String> activatedPackages, SharedPreferences sharedPreferences,
-      Context context, AccessibilityChecker accessibilityChecker) {
+      Context context) {
     this.activatedPackages = activatedPackages;
     this.context = context;
     this.sharedPreferences = sharedPreferences;
-    this.accessibilityChecker = accessibilityChecker;
   }
 
   public void setView(MainActivityView mainActivityView) {
     this.mainActivityView = mainActivityView;
+    try {
+      checkAccessibilityEnabled();
+    } catch (Settings.SettingNotFoundException e) {
+      e.printStackTrace();
+    }
   }
 
-  public void checkAccessibilityEnabled() {
-    if (!accessibilityChecker.isAccessibilityEnabled(context)) {
+  private void checkAccessibilityEnabled() throws Settings.SettingNotFoundException {
+    int enabled =
+        Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.ACCESSIBILITY_ENABLED);
+    if (enabled == 0) {
       mainActivityView.showAccessibilityDialog();
     }
   }
@@ -75,8 +80,7 @@ import javax.inject.Inject;
     mainActivityView.showActivateButton();
     mainActivityView.showActivateHeader();
     mainActivityView.setActivateDrawable(
-        Utils.createVectorDrawable(mainActivityView.getActivityContext(),
-            R.drawable.ic_play_circle));
+        ContextCompat.getDrawable(context, R.drawable.ic_play_circle));
   }
 
   void storeTiming(String timing) {
@@ -112,8 +116,7 @@ import javax.inject.Inject;
 
   private void checkAndActivateAppLock() {
     mainActivityView.setActivateDrawable(
-        Utils.createVectorDrawable(mainActivityView.getActivityContext(),
-            R.drawable.ic_pause_circle));
+        ContextCompat.getDrawable(context, R.drawable.ic_pause_circle));
 
     if (activatedPackages.size() == 0) {
       mainActivityView.showToast(Constants.ADD_APPS_MESSAGE);
