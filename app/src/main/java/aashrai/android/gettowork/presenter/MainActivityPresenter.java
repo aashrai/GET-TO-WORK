@@ -1,21 +1,23 @@
 package aashrai.android.gettowork.presenter;
 
-import aashrai.android.gettowork.utils.Constants;
-import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.di.MainActivityScope;
-import aashrai.android.gettowork.utils.Utils;
-import aashrai.android.gettowork.view.MainActivityView;
-import aashrai.android.gettowork.view.activity.CreditActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
+
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
+
+import aashrai.android.gettowork.R;
+import aashrai.android.gettowork.di.MainActivityScope;
+import aashrai.android.gettowork.utils.Constants;
+import aashrai.android.gettowork.utils.Utils;
+import aashrai.android.gettowork.view.MainActivityView;
+import aashrai.android.gettowork.view.activity.CreditActivity;
 
 @MainActivityScope public class MainActivityPresenter implements DialogInterface.OnClickListener {
 
@@ -80,7 +82,8 @@ import javax.inject.Inject;
     mainActivityView.showActivateButton();
     mainActivityView.showActivateHeader();
     mainActivityView.setActivateDrawable(
-        ContextCompat.getDrawable(context, R.drawable.ic_play_circle));
+        Utils.createVectorDrawable(mainActivityView.getActivityContext(), R.drawable.ic_play_circle)
+    );
   }
 
   void storeTiming(String timing) {
@@ -116,7 +119,8 @@ import javax.inject.Inject;
 
   private void checkAndActivateAppLock() {
     mainActivityView.setActivateDrawable(
-        ContextCompat.getDrawable(context, R.drawable.ic_pause_circle));
+        Utils.createVectorDrawable(mainActivityView.getActivityContext(), R.drawable.ic_pause_circle)
+    );
 
     if (activatedPackages.size() == 0) {
       mainActivityView.showToast(Constants.ADD_APPS_MESSAGE);

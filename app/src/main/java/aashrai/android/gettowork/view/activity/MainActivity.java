@@ -1,5 +1,24 @@
 package aashrai.android.gettowork.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.adapter.TimingGridAdapter;
@@ -8,24 +27,8 @@ import aashrai.android.gettowork.presenter.MainActivityPresenter;
 import aashrai.android.gettowork.utils.TimingGridDecorator;
 import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.OnClick;
-import java.util.Arrays;
-import java.util.List;
-import javax.inject.Inject;
 
 public class MainActivity extends BaseActivity
     implements MainActivityView, TimingGridAdapter.onTimingClickListener {
@@ -87,10 +90,9 @@ public class MainActivity extends BaseActivity
   }
 
   private void setActivateDrawable() {
-    activate.setImageDrawable(
-        Utils.isAppLockActivated(sharedPreferences) ? ContextCompat.getDrawable(this,
-            R.drawable.ic_pause_circle)
-            : ContextCompat.getDrawable(this, R.drawable.ic_play_circle));
+    activate.setImageDrawable(Utils.isAppLockActivated(sharedPreferences) ?
+            Utils.createVectorDrawable(this, R.drawable.ic_pause_circle)
+            : Utils.createVectorDrawable(this, R.drawable.ic_play_circle));
   }
 
   @Override public void configureDagger() {
@@ -184,7 +186,12 @@ public class MainActivity extends BaseActivity
         .show();
   }
 
-  @OnClick(R.id.tv_pauseWarning) public void onWarningTextClick() {
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
+
+    @OnClick(R.id.tv_pauseWarning) public void onWarningTextClick() {
     presenter.onWarningTextClick();
   }
 
