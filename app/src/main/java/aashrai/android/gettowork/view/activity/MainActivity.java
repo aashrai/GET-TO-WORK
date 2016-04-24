@@ -10,10 +10,11 @@ import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,8 @@ public class MainActivity extends BaseActivity
   @Bind(R.id.tv_pauseWarning) TextView pauseWarning;
   @Bind(R.id.tv_activateHeader) TextView activateHeader;
   MainActivityComponent mainActivityComponent;
+  @Inject Resources resources;
+  @Inject Resources.Theme theme;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -87,10 +90,9 @@ public class MainActivity extends BaseActivity
   }
 
   private void setActivateDrawable() {
-    activate.setImageDrawable(
-        Utils.isAppLockActivated(sharedPreferences) ? ContextCompat.getDrawable(this,
-            R.drawable.ic_pause_circle)
-            : ContextCompat.getDrawable(this, R.drawable.ic_play_circle));
+    activate.setImageDrawable(Utils.isAppLockActivated(sharedPreferences) ?
+            VectorDrawableCompat.create(resources, R.drawable.ic_pause_circle, theme)
+            : VectorDrawableCompat.create(resources, R.drawable.ic_play_circle, theme));
   }
 
   @Override public void configureDagger() {
