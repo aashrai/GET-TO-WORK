@@ -18,5 +18,4 @@ android:
     - '.+'
 
 script:
-   - ./gradlew clean assemble
    - ./gradlew test --continue
