@@ -1,52 +1,45 @@
 package aashrai.android.gettowork.presenter;
 
+import aashrai.android.gettowork.R;
+import aashrai.android.gettowork.di.MainActivityScope;
+import aashrai.android.gettowork.utils.AccessibilityChecker;
+import aashrai.android.gettowork.utils.Constants;
+import aashrai.android.gettowork.utils.Utils;
+import aashrai.android.gettowork.view.MainActivityView;
+import aashrai.android.gettowork.view.activity.CreditActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.provider.Settings;
-
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
-
-import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.di.MainActivityScope;
-import aashrai.android.gettowork.utils.Constants;
-import aashrai.android.gettowork.utils.Utils;
-import aashrai.android.gettowork.view.MainActivityView;
-import aashrai.android.gettowork.view.activity.CreditActivity;
 
 @MainActivityScope public class MainActivityPresenter implements DialogInterface.OnClickListener {
 
   private final Set<String> activatedPackages;
   private final SharedPreferences sharedPreferences;
   private final Context context;
+  private final AccessibilityChecker accessibilityChecker;
   private MainActivityView mainActivityView;
 
   @Inject
   public MainActivityPresenter(Set<String> activatedPackages, SharedPreferences sharedPreferences,
-      Context context) {
+      Context context, AccessibilityChecker accessibilityChecker) {
     this.activatedPackages = activatedPackages;
     this.context = context;
     this.sharedPreferences = sharedPreferences;
+    this.accessibilityChecker = accessibilityChecker;
   }
 
   public void setView(MainActivityView mainActivityView) {
     this.mainActivityView = mainActivityView;
-    try {
-      checkAccessibilityEnabled();
-    } catch (Settings.SettingNotFoundException e) {
-      e.printStackTrace();
-    }
   }
 
-  private void checkAccessibilityEnabled() throws Settings.SettingNotFoundException {
-    int enabled =
-        Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.ACCESSIBILITY_ENABLED);
-    if (enabled == 0) {
+  public void checkAccessibilityEnabled() {
+    if (!accessibilityChecker.isAccessibilityEnabled(context)) {
       mainActivityView.showAccessibilityDialog();
     }
   }
@@ -82,8 +75,8 @@ import aashrai.android.gettowork.view.activity.CreditActivity;
     mainActivityView.showActivateButton();
     mainActivityView.showActivateHeader();
     mainActivityView.setActivateDrawable(
-        Utils.createVectorDrawable(mainActivityView.getActivityContext(), R.drawable.ic_play_circle)
-    );
+        Utils.createVectorDrawable(mainActivityView.getActivityContext(),
+            R.drawable.ic_play_circle));
   }
 
   void storeTiming(String timing) {
@@ -119,8 +112,8 @@ import aashrai.android.gettowork.view.activity.CreditActivity;
 
   private void checkAndActivateAppLock() {
     mainActivityView.setActivateDrawable(
-        Utils.createVectorDrawable(mainActivityView.getActivityContext(), R.drawable.ic_pause_circle)
-    );
+        Utils.createVectorDrawable(mainActivityView.getActivityContext(),
+            R.drawable.ic_pause_circle));
 
     if (activatedPackages.size() == 0) {
       mainActivityView.showToast(Constants.ADD_APPS_MESSAGE);
