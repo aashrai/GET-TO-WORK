@@ -1,17 +1,16 @@
 package aashrai.android.gettowork.presenter;
 
 import aashrai.android.gettowork.BuildConfig;
-import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.utils.AccessibilityChecker;
 import aashrai.android.gettowork.utils.Constants;
+import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.junit.After;
@@ -28,7 +27,6 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(RobolectricGradleTestRunner.class)
@@ -38,8 +36,6 @@ public class MainActivityPresenterTest {
   SharedPreferences sharedPreferences;
   @Mock Set<String> activatedPackages;
   @Mock MainActivityView mainActivityView;
-  @Mock AccessibilityChecker accessibilityChecker;
-  Context context;
   Drawable pauseDrawable;
   Drawable playDrawable;
 
@@ -47,15 +43,16 @@ public class MainActivityPresenterTest {
 
   @Before public void setUp() throws Exception {
     MockitoAnnotations.initMocks(this);
-    context = RuntimeEnvironment.application;
-    sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    mainActivityPresenter = new MainActivityPresenter(activatedPackages, sharedPreferences, context,
-        accessibilityChecker);
+    sharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(RuntimeEnvironment.application);
+    mainActivityPresenter = new MainActivityPresenter(activatedPackages, sharedPreferences,
+        RuntimeEnvironment.application);
     mainActivityPresenter.setView(mainActivityView);
-    given(mainActivityView.getActivityContext()).willReturn(context);
 
-    pauseDrawable = Utils.createVectorDrawable(context, R.drawable.ic_pause_circle);
-    playDrawable = Utils.createVectorDrawable(context, R.drawable.ic_play_circle);
+    pauseDrawable =
+        ContextCompat.getDrawable(RuntimeEnvironment.application, R.drawable.ic_pause_circle);
+    playDrawable =
+        ContextCompat.getDrawable(RuntimeEnvironment.application, R.drawable.ic_play_circle);
   }
 
   @SuppressLint("CommitPrefEdits") @Test public void testOnAppLockActivate_NO_INCLUDEDPACKAGES()
@@ -64,7 +61,8 @@ public class MainActivityPresenterTest {
     given(activatedPackages.size()).willReturn(0);
     mainActivityPresenter.onAppLockActivateClick();
     verify(mainActivityView).showToast(Constants.ADD_APPS_MESSAGE);
-    verify(mainActivityView).launchActivity(Utils.getSettingsActivityIntent(context));
+    verify(mainActivityView).launchActivity(
+        Utils.getSettingsActivityIntent(RuntimeEnvironment.application));
     verify(mainActivityView).setActivateDrawable(pauseDrawable);
     assertTrue(sharedPreferences.getBoolean(Constants.APP_LOCK_ACTIVATED, false));
   }
@@ -134,17 +132,5 @@ public class MainActivityPresenterTest {
 
     millis = mainActivityPresenter.getMillis("24 hrs");
     assertEquals(TimeUnit.HOURS.toMillis(24), millis);
-  }
-
-  @Test public void testSetView_AccessibilityEnabled() throws Exception {
-    given(accessibilityChecker.isAccessibilityEnabled(context)).willReturn(true);
-    mainActivityPresenter.checkAccessibilityEnabled();
-    verify(mainActivityView, times(0)).showAccessibilityDialog();
-  }
-
-  @Test public void testSetView_AccessibilityDisabled() throws Exception {
-    given(accessibilityChecker.isAccessibilityEnabled(context)).willReturn(false);
-    mainActivityPresenter.checkAccessibilityEnabled();
-    verify(mainActivityView).showAccessibilityDialog();
   }
 }
