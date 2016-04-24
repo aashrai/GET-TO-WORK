@@ -10,9 +10,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.Settings;
-import android.support.v4.content.ContextCompat;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -23,13 +24,17 @@ import javax.inject.Inject;
   private final SharedPreferences sharedPreferences;
   private final Context context;
   private MainActivityView mainActivityView;
+  private final Resources resources;
+  private final Resources.Theme theme;
 
   @Inject
   public MainActivityPresenter(Set<String> activatedPackages, SharedPreferences sharedPreferences,
-      Context context) {
+      Context context, Resources resources, Resources.Theme theme) {
     this.activatedPackages = activatedPackages;
     this.context = context;
     this.sharedPreferences = sharedPreferences;
+    this.resources = resources;
+    this.theme = theme;
   }
 
   public void setView(MainActivityView mainActivityView) {
@@ -80,7 +85,8 @@ import javax.inject.Inject;
     mainActivityView.showActivateButton();
     mainActivityView.showActivateHeader();
     mainActivityView.setActivateDrawable(
-        ContextCompat.getDrawable(context, R.drawable.ic_play_circle));
+        VectorDrawableCompat.create(resources, R.drawable.ic_play_circle, theme)
+    );
   }
 
   void storeTiming(String timing) {
@@ -116,7 +122,8 @@ import javax.inject.Inject;
 
   private void checkAndActivateAppLock() {
     mainActivityView.setActivateDrawable(
-        ContextCompat.getDrawable(context, R.drawable.ic_pause_circle));
+      VectorDrawableCompat.create(resources, R.drawable.ic_pause_circle, theme)
+    );
 
     if (activatedPackages.size() == 0) {
       mainActivityView.showToast(Constants.ADD_APPS_MESSAGE);
