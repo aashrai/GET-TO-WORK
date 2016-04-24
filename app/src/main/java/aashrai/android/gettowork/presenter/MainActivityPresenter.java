@@ -1,22 +1,23 @@
 package aashrai.android.gettowork.presenter;
 
-import aashrai.android.gettowork.utils.Constants;
-import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.di.MainActivityScope;
-import aashrai.android.gettowork.utils.Utils;
-import aashrai.android.gettowork.view.MainActivityView;
-import aashrai.android.gettowork.view.activity.CreditActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.Settings;
-import android.support.graphics.drawable.VectorDrawableCompat;
+
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
+
+import aashrai.android.gettowork.R;
+import aashrai.android.gettowork.di.MainActivityScope;
+import aashrai.android.gettowork.utils.Constants;
+import aashrai.android.gettowork.utils.Utils;
+import aashrai.android.gettowork.view.MainActivityView;
+import aashrai.android.gettowork.view.activity.CreditActivity;
 
 @MainActivityScope public class MainActivityPresenter implements DialogInterface.OnClickListener {
 
@@ -24,17 +25,13 @@ import javax.inject.Inject;
   private final SharedPreferences sharedPreferences;
   private final Context context;
   private MainActivityView mainActivityView;
-  private final Resources resources;
-  private final Resources.Theme theme;
 
   @Inject
   public MainActivityPresenter(Set<String> activatedPackages, SharedPreferences sharedPreferences,
-      Context context, Resources resources, Resources.Theme theme) {
+      Context context) {
     this.activatedPackages = activatedPackages;
     this.context = context;
     this.sharedPreferences = sharedPreferences;
-    this.resources = resources;
-    this.theme = theme;
   }
 
   public void setView(MainActivityView mainActivityView) {
@@ -85,7 +82,7 @@ import javax.inject.Inject;
     mainActivityView.showActivateButton();
     mainActivityView.showActivateHeader();
     mainActivityView.setActivateDrawable(
-        VectorDrawableCompat.create(resources, R.drawable.ic_play_circle, theme)
+        Utils.createVectorDrawable(mainActivityView.getActivityContext(), R.drawable.ic_play_circle)
     );
   }
 
@@ -122,7 +119,7 @@ import javax.inject.Inject;
 
   private void checkAndActivateAppLock() {
     mainActivityView.setActivateDrawable(
-      VectorDrawableCompat.create(resources, R.drawable.ic_pause_circle, theme)
+        Utils.createVectorDrawable(mainActivityView.getActivityContext(), R.drawable.ic_pause_circle)
     );
 
     if (activatedPackages.size() == 0) {

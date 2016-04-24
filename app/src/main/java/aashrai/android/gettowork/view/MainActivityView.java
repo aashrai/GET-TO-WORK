@@ -1,5 +1,6 @@
 package aashrai.android.gettowork.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 
@@ -32,4 +33,6 @@ public interface MainActivityView {
   void hideActivateButton();
 
   void showAccessibilityDialog();
+
+  Context getActivityContext();
 }

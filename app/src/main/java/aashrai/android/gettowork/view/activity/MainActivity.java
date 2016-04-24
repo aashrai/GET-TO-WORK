@@ -1,5 +1,24 @@
 package aashrai.android.gettowork.view.activity;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.adapter.TimingGridAdapter;
@@ -8,25 +27,8 @@ import aashrai.android.gettowork.presenter.MainActivityPresenter;
 import aashrai.android.gettowork.utils.TimingGridDecorator;
 import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.MainActivityView;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.graphics.drawable.VectorDrawableCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.OnClick;
-import java.util.Arrays;
-import java.util.List;
-import javax.inject.Inject;
 
 public class MainActivity extends BaseActivity
     implements MainActivityView, TimingGridAdapter.onTimingClickListener {
@@ -38,8 +40,6 @@ public class MainActivity extends BaseActivity
   @Bind(R.id.tv_pauseWarning) TextView pauseWarning;
   @Bind(R.id.tv_activateHeader) TextView activateHeader;
   MainActivityComponent mainActivityComponent;
-  @Inject Resources resources;
-  @Inject Resources.Theme theme;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -91,8 +91,8 @@ public class MainActivity extends BaseActivity
 
   private void setActivateDrawable() {
     activate.setImageDrawable(Utils.isAppLockActivated(sharedPreferences) ?
-            VectorDrawableCompat.create(resources, R.drawable.ic_pause_circle, theme)
-            : VectorDrawableCompat.create(resources, R.drawable.ic_play_circle, theme));
+            Utils.createVectorDrawable(this, R.drawable.ic_pause_circle)
+            : Utils.createVectorDrawable(this, R.drawable.ic_play_circle));
   }
 
   @Override public void configureDagger() {
@@ -186,7 +186,12 @@ public class MainActivity extends BaseActivity
         .show();
   }
 
-  @OnClick(R.id.tv_pauseWarning) public void onWarningTextClick() {
+    @Override
+    public Context getActivityContext() {
+        return this;
+    }
+
+    @OnClick(R.id.tv_pauseWarning) public void onWarningTextClick() {
     presenter.onWarningTextClick();
   }
 
