@@ -1,8 +1,16 @@
 package aashrai.android.gettowork.view.activity;
 
+import aashrai.android.gettowork.GoToWorkApplication;
+import aashrai.android.gettowork.R;
+import aashrai.android.gettowork.adapter.PackageListAdapter;
+import aashrai.android.gettowork.di.component.SettingsComponent;
+import aashrai.android.gettowork.presenter.SettingsActivityPresenter;
+import aashrai.android.gettowork.utils.AppListDecorator;
+import aashrai.android.gettowork.view.SettingsView;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,23 +21,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import butterknife.Bind;
 import com.jakewharton.rxbinding.widget.RxTextView;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
-
-import aashrai.android.gettowork.GoToWorkApplication;
-import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.adapter.PackageListAdapter;
-import aashrai.android.gettowork.di.component.SettingsComponent;
-import aashrai.android.gettowork.presenter.SettingsActivityPresenter;
-import aashrai.android.gettowork.utils.AppListDecorator;
-import aashrai.android.gettowork.utils.Utils;
-import aashrai.android.gettowork.view.SettingsView;
-import butterknife.Bind;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
@@ -54,8 +50,8 @@ public class SettingsActivity extends BaseActivity
   }
 
   private void configureSearch() {
-    search.setCompoundDrawables(null, null,
-        Utils.createVectorDrawable(this, R.drawable.ic_search), null);
+    search.setCompoundDrawables(null, null, ContextCompat.getDrawable(this, R.drawable.ic_search),
+        null);
     search.setOnEditorActionListener(this);
     compositeSubscription = new CompositeSubscription();
     compositeSubscription.add(RxTextView.textChanges(search)

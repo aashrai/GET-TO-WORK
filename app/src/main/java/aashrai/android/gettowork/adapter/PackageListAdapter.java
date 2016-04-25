@@ -15,6 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,9 +27,9 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
   private final Picasso picasso;
   private static final String TAG = "PackageListAdapter";
 
-  public PackageListAdapter(List<ApplicationInfo> packageList, Set<String> activatedPackages,
+  public PackageListAdapter(Set<String> activatedPackages,
       Context context) {
-    this.packageList = packageList;
+    this.packageList = new ArrayList<>();
     this.activatedPackages = activatedPackages;
     this.packageManager = context.getPackageManager();
     picasso =
