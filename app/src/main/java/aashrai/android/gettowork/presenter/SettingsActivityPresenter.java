@@ -1,15 +1,13 @@
 package aashrai.android.gettowork.presenter;
 
-import aashrai.android.gettowork.utils.Constants;
 import aashrai.android.gettowork.adapter.PackageListAdapter;
 import aashrai.android.gettowork.di.SettingsScope;
+import aashrai.android.gettowork.utils.Constants;
 import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.SettingsView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.util.Log;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,7 +22,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-@SettingsScope public class SettingsActivityPresenter extends Subscriber<List<ApplicationInfo>>
+@SettingsScope public class SettingsActivityPresenter
     implements PackageListAdapter.onPackageToggleListener {
 
   private final Context context;
@@ -48,44 +46,21 @@ import rx.subscriptions.CompositeSubscription;
 
   public void setView(SettingsView settingsView) {
     this.settingsView = settingsView;
+    settingsView.configureRecyclerView(createPackageAdapter());
+    findInstalledApplications();
+  }
 
-    Subscription subscription = Observable.from(
-        context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .filter(Utils.removeSelfPackage(context))
-        .filter(Utils.removeLaunchers(context))
-        .filter(Utils.removeSystemApps(context))
-        .toSortedList(Utils.getApplicationSortFunction(context))
-        .subscribe(this);
+  private void findInstalledApplications() {
+    Subscription subscription = Utils.deferedApplicationInfoFetcher(context)
+        .subscribe(new InitialPackageFetchSubscriber(new WeakReference<>(settingsView),
+            new WeakReference<>(packageList)));
     compositeSubscription.add(subscription);
   }
 
-  private PackageListAdapter createPackageAdapter(List<ApplicationInfo> applicationInfoList) {
-    packageList.addAll(applicationInfoList);
-    PackageListAdapter packageListAdapter =
-        new PackageListAdapter(applicationInfoList, activatedPackages, context.getPackageManager(),
-            context);
+  private PackageListAdapter createPackageAdapter() {
+    PackageListAdapter packageListAdapter = new PackageListAdapter(activatedPackages, context);
     packageListAdapter.setPackageToggleListener(this);
     return packageListAdapter;
-  }
-
-  @Override public void onStart() {
-    settingsView.startProgressBar();
-  }
-
-  @Override public void onCompleted() {
-    settingsView.stopProgressBar();
-    unsubscribe();
-  }
-
-  @Override public void onError(Throwable e) {
-    settingsView.stopProgressBar();
-  }
-
-  @Override public void onNext(List<ApplicationInfo> applicationInfoList) {
-    Log.d(TAG, "onNext() called with: " + "applicationInfoList " + applicationInfoList.size());
-    settingsView.setPackageListAdapter(createPackageAdapter(applicationInfoList));
   }
 
   public void onSearch(final String query) {
@@ -110,7 +85,7 @@ import rx.subscriptions.CompositeSubscription;
         .toList()
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new SearchSubscription(new WeakReference<>(settingsView)));
+        .subscribe(new PackageFetchSubscriber(new WeakReference<>(settingsView)));
   }
 
   public void onDestroy() {
@@ -126,11 +101,11 @@ import rx.subscriptions.CompositeSubscription;
     preferences.edit().putStringSet(Constants.ACTIVATED_PACKAGES, activatedPackages).apply();
   }
 
-  public static class SearchSubscription extends Subscriber<List<ApplicationInfo>> {
+  public static class PackageFetchSubscriber extends Subscriber<List<ApplicationInfo>> {
 
     private final SettingsView settingsView;
 
-    public SearchSubscription(WeakReference<SettingsView> weakReference) {
+    public PackageFetchSubscriber(WeakReference<SettingsView> weakReference) {
       this.settingsView = weakReference.get();
     }
 
@@ -151,6 +126,22 @@ import rx.subscriptions.CompositeSubscription;
 
     @Override public void onNext(List<ApplicationInfo> applicationInfoList) {
       settingsView.updatePackageListAdapter(applicationInfoList);
+    }
+  }
+
+  public static class InitialPackageFetchSubscriber extends PackageFetchSubscriber {
+
+    private final List<ApplicationInfo> applicationInfoStore;
+
+    public InitialPackageFetchSubscriber(WeakReference<SettingsView> settingsViewWeakReference,
+        WeakReference<List<ApplicationInfo>> listWeakReference) {
+      super(settingsViewWeakReference);
+      applicationInfoStore = listWeakReference.get();
+    }
+
+    @Override public void onNext(List<ApplicationInfo> applicationInfoList) {
+      super.onNext(applicationInfoList);
+      applicationInfoStore.addAll(applicationInfoList);
     }
   }
 }

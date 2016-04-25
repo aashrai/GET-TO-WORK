@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface SettingsView {
 
-  void setPackageListAdapter(PackageListAdapter adapter);
+  void configureRecyclerView(PackageListAdapter adapter);
 
   void updatePackageListAdapter(List<ApplicationInfo> packageList);
 
