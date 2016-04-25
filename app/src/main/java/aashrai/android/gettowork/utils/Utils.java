@@ -5,10 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.support.graphics.drawable.VectorDrawableCompat;
-
+import java.util.List;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.functions.Func2;
+import rx.schedulers.Schedulers;
 
 public class Utils {
   public static Intent getHomeScreenIntent() {
@@ -64,7 +69,7 @@ public class Utils {
     };
   }
 
-  public static Func1<? super ApplicationInfo, Boolean> removeSystemApps(final Context context) {
+  public static Func1<? super ApplicationInfo, Boolean> removeSystemApps() {
     return new Func1<ApplicationInfo, Boolean>() {
       @Override public Boolean call(ApplicationInfo applicationInfo) {
         return (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
@@ -74,5 +79,19 @@ public class Utils {
 
   public static VectorDrawableCompat createVectorDrawable(final Context context, int resourceId) {
     return VectorDrawableCompat.create(context.getResources(), resourceId, context.getTheme());
+  }
+
+  public static Observable<List<ApplicationInfo>> deferedApplicationInfoFetcher(
+      final Context context) {
+    return Observable.defer(new Func0<Observable<List<ApplicationInfo>>>() {
+      @Override public Observable<List<ApplicationInfo>> call() {
+        return Observable.from(
+            context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
+            .filter(Utils.removeSelfPackage(context))
+            .filter(Utils.removeLaunchers(context))
+            .filter(Utils.removeSystemApps())
+            .toSortedList(Utils.getApplicationSortFunction(context));
+      }
+    }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
   }
 }

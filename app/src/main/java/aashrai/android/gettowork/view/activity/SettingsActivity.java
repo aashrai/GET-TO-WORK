@@ -74,7 +74,7 @@ public class SettingsActivity extends BaseActivity
     return R.layout.activity_settings;
   }
 
-  @Override public void setPackageListAdapter(PackageListAdapter adapter) {
+  @Override public void configureRecyclerView(PackageListAdapter adapter) {
     this.adapter = adapter;
     packageList.setLayoutManager(new LinearLayoutManager(this));
     packageList.addItemDecoration(new AppListDecorator());

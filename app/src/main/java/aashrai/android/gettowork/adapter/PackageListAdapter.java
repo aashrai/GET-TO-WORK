@@ -27,10 +27,10 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
   private static final String TAG = "PackageListAdapter";
 
   public PackageListAdapter(List<ApplicationInfo> packageList, Set<String> activatedPackages,
-      PackageManager packageManager, Context context) {
+      Context context) {
     this.packageList = packageList;
     this.activatedPackages = activatedPackages;
-    this.packageManager = packageManager;
+    this.packageManager = context.getPackageManager();
     picasso =
         new Picasso.Builder(context).addRequestHandler(new AppIconRequestHandler(context)).build();
 

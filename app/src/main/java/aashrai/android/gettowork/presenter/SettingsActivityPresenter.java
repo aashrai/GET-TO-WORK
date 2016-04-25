@@ -1,15 +1,13 @@
 package aashrai.android.gettowork.presenter;
 
-import aashrai.android.gettowork.utils.Constants;
 import aashrai.android.gettowork.adapter.PackageListAdapter;
 import aashrai.android.gettowork.di.SettingsScope;
+import aashrai.android.gettowork.utils.Constants;
 import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.SettingsView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.util.Log;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -48,24 +46,18 @@ import rx.subscriptions.CompositeSubscription;
 
   public void setView(SettingsView settingsView) {
     this.settingsView = settingsView;
+    settingsView.configureRecyclerView(createPackageAdapter());
+    findInstalledApplications();
+  }
 
-    Subscription subscription = Observable.from(
-        context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .filter(Utils.removeSelfPackage(context))
-        .filter(Utils.removeLaunchers(context))
-        .filter(Utils.removeSystemApps(context))
-        .toSortedList(Utils.getApplicationSortFunction(context))
-        .subscribe(this);
+  private void findInstalledApplications() {
+    Subscription subscription = Utils.deferedApplicationInfoFetcher(context).subscribe(this);
     compositeSubscription.add(subscription);
   }
 
-  private PackageListAdapter createPackageAdapter(List<ApplicationInfo> applicationInfoList) {
-    packageList.addAll(applicationInfoList);
+  private PackageListAdapter createPackageAdapter() {
     PackageListAdapter packageListAdapter =
-        new PackageListAdapter(applicationInfoList, activatedPackages, context.getPackageManager(),
-            context);
+        new PackageListAdapter(packageList, activatedPackages, context);
     packageListAdapter.setPackageToggleListener(this);
     return packageListAdapter;
   }
@@ -84,8 +76,7 @@ import rx.subscriptions.CompositeSubscription;
   }
 
   @Override public void onNext(List<ApplicationInfo> applicationInfoList) {
-    Log.d(TAG, "onNext() called with: " + "applicationInfoList " + applicationInfoList.size());
-    settingsView.setPackageListAdapter(createPackageAdapter(applicationInfoList));
+    settingsView.updatePackageListAdapter(applicationInfoList);
   }
 
   public void onSearch(final String query) {
