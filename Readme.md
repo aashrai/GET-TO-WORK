@@ -1,5 +1,7 @@
 # GET TO WORK
 
+[![Join the chat at https://gitter.im/aashrairavooru/GET-TO-WORK](https://badges.gitter.im/aashrairavooru/GET-TO-WORK.svg)](https://gitter.im/aashrairavooru/GET-TO-WORK?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Android port of the awesome chrome plugin [GO FUCKING WORK](goo.gl/EIYytN ) by [Alexander Lam](https://twitter.com/hialexlam)
 
 ## Features
