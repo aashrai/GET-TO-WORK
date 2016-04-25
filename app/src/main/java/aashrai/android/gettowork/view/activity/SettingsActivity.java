@@ -50,8 +50,8 @@ public class SettingsActivity extends BaseActivity
   }
 
   private void configureSearch() {
-    search.setCompoundDrawables(null, null, ContextCompat.getDrawable(this, R.drawable.ic_search),
-        null);
+    search.setCompoundDrawablesWithIntrinsicBounds(null, null,
+        ContextCompat.getDrawable(this, R.drawable.ic_search), null);
     search.setOnEditorActionListener(this);
     compositeSubscription = new CompositeSubscription();
     compositeSubscription.add(RxTextView.textChanges(search)
