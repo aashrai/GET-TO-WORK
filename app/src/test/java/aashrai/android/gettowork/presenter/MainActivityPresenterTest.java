@@ -1,6 +1,6 @@
 package aashrai.android.gettowork.presenter;
 
-import aashrai.android.gettowork.BuildConfig;
+import aashrai.android.gettowork.BaseTest;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.utils.AccessibilityChecker;
 import aashrai.android.gettowork.utils.Constants;
@@ -10,19 +10,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotSame;
@@ -31,9 +27,8 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = Build.VERSION_CODES.LOLLIPOP)
-public class MainActivityPresenterTest {
+
+public class MainActivityPresenterTest extends BaseTest{
 
   SharedPreferences sharedPreferences;
   @Mock Set<String> activatedPackages;
