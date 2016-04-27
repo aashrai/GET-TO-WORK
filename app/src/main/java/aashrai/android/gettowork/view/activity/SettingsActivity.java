@@ -56,6 +56,7 @@ public class SettingsActivity extends BaseActivity
     compositeSubscription.add(RxTextView.textChanges(search)
         .debounce(100, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
+        .startWith("")
         .subscribe(new SearchBarSubscriber(new WeakReference<>(presenter))));
   }
 
