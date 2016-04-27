@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -23,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.Bind;
 import com.jakewharton.rxbinding.widget.RxTextView;
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -39,7 +39,6 @@ public class SettingsActivity extends BaseActivity
   @Inject SettingsActivityPresenter presenter;
   PackageListAdapter adapter;
   CompositeSubscription compositeSubscription;
-  boolean firstSearchFlag = true;
   private static final String TAG = "SettingsActivity";
   SettingsComponent settingsComponent;
 
@@ -57,7 +56,7 @@ public class SettingsActivity extends BaseActivity
     compositeSubscription.add(RxTextView.textChanges(search)
         .debounce(100, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(this));
+        .subscribe(new SearchBarSubscriber(new WeakReference<>(presenter))));
   }
 
   @Override public void configureDagger() {
@@ -78,7 +77,6 @@ public class SettingsActivity extends BaseActivity
   }
 
   @Override public void updatePackageListAdapter(List<ApplicationInfo> packageList) {
-    Log.d(TAG, "updatePackageListAdapter: " + packageList.size());
     adapter.updatePackageList(packageList);
   }
 
@@ -91,11 +89,7 @@ public class SettingsActivity extends BaseActivity
   }
 
   @Override public void call(CharSequence charSequence) {
-    if (!firstSearchFlag) {
-      presenter.onSearch(charSequence.toString());
-    } else {
-      firstSearchFlag = false;
-    }
+    presenter.onSearch(charSequence.toString());
   }
 
   @Override protected void onDestroy() {
@@ -112,6 +106,19 @@ public class SettingsActivity extends BaseActivity
       return true;
     }
     return false;
+  }
+
+  private static class SearchBarSubscriber implements Action1<CharSequence> {
+
+    private final SettingsActivityPresenter presenter;
+
+    private SearchBarSubscriber(WeakReference<SettingsActivityPresenter> presenterWeakReference) {
+      presenter = presenterWeakReference.get();
+    }
+
+    @Override public void call(CharSequence charSequence) {
+      presenter.onSearch(charSequence.toString());
+    }
   }
 }
 
