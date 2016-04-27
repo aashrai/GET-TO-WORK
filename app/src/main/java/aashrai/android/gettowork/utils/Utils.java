@@ -61,10 +61,7 @@ public class Utils {
     return new Func1<ApplicationInfo, Boolean>() {
       @Override public Boolean call(ApplicationInfo applicationInfo) {
         //Hack for filtering launchers
-        return !applicationInfo.loadLabel(context.getPackageManager())
-            .toString()
-            .toLowerCase()
-            .contains("launcher");
+        return !getApplicationName(applicationInfo, context).contains("launcher");
       }
     };
   }
@@ -82,10 +79,7 @@ public class Utils {
   }
 
   public static String getApplicationName(ApplicationInfo applicationInfo, Context context) {
-    return context.getPackageManager()
-        .getApplicationLabel(applicationInfo)
-        .toString()
-        .toLowerCase();
+    return applicationInfo.loadLabel(context.getPackageManager()).toString().toLowerCase();
   }
 
   public static Observable<List<ApplicationInfo>> deferedApplicationInfoFetcher(
