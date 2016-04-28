@@ -61,10 +61,7 @@ public class Utils {
     return new Func1<ApplicationInfo, Boolean>() {
       @Override public Boolean call(ApplicationInfo applicationInfo) {
         //Hack for filtering launchers
-        return !applicationInfo.loadLabel(context.getPackageManager())
-            .toString()
-            .toLowerCase()
-            .contains("launcher");
+        return !getApplicationName(applicationInfo, context).contains("launcher");
       }
     };
   }
@@ -81,17 +78,26 @@ public class Utils {
     return VectorDrawableCompat.create(context.getResources(), resourceId, context.getTheme());
   }
 
+  public static String getApplicationName(ApplicationInfo applicationInfo, Context context) {
+    return applicationInfo.loadLabel(context.getPackageManager()).toString().toLowerCase();
+  }
+
   public static Observable<List<ApplicationInfo>> deferedApplicationInfoFetcher(
       final Context context) {
-    return Observable.defer(new Func0<Observable<List<ApplicationInfo>>>() {
-      @Override public Observable<List<ApplicationInfo>> call() {
-        return Observable.from(
-            context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
-            .filter(Utils.removeSelfPackage(context))
-            .filter(Utils.removeLaunchers(context))
-            .filter(Utils.removeSystemApps())
-            .toSortedList(Utils.getApplicationSortFunction(context));
+    return getDeferedObservable(Observable.from(
+        context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
+        .filter(Utils.removeSelfPackage(context))
+        .filter(Utils.removeLaunchers(context))
+        .filter(Utils.removeSystemApps())
+        .toSortedList(Utils.getApplicationSortFunction(context))).observeOn(
+        AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+  }
+
+  public static <T> Observable<T> getDeferedObservable(final Observable<T> observable) {
+    return Observable.defer(new Func0<Observable<T>>() {
+      @Override public Observable<T> call() {
+        return observable;
       }
-    }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+    });
   }
 }
