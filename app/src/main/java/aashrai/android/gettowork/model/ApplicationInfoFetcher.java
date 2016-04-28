@@ -8,25 +8,26 @@ import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 @SettingsScope public class ApplicationInfoFetcher {
 
   private final Context context;
 
-  @Inject
-  public ApplicationInfoFetcher(Context context) {
+  @Inject public ApplicationInfoFetcher(Context context) {
     this.context = context;
   }
 
   public Observable<List<ApplicationInfo>> getAllApplications() {
-    return Utils.deferedApplicationInfoFetcher(context);
+    return Utils.getAllApplications(context);
   }
 
   public Observable<List<ApplicationInfo>> getFilteredApplications(
       List<ApplicationInfo> applicationInfoList, String query) {
-    return Utils.getDeferedObservable(Observable.from(applicationInfoList)
+    return Observable.from(applicationInfoList)
+        .observeOn(Schedulers.computation())
         .filter(new PackageQueryFilter(context, query))
-        .toList());
+        .toList();
   }
 
   private static class PackageQueryFilter implements Func1<ApplicationInfo, Boolean> {

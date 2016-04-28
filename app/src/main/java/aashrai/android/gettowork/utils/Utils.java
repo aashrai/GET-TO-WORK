@@ -82,15 +82,14 @@ public class Utils {
     return applicationInfo.loadLabel(context.getPackageManager()).toString().toLowerCase();
   }
 
-  public static Observable<List<ApplicationInfo>> deferedApplicationInfoFetcher(
-      final Context context) {
+  public static Observable<List<ApplicationInfo>> getAllApplications(final Context context) {
     return getDeferedObservable(Observable.from(
         context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
         .filter(Utils.removeSelfPackage(context))
         .filter(Utils.removeLaunchers(context))
         .filter(Utils.removeSystemApps())
         .toSortedList(Utils.getApplicationSortFunction(context))).observeOn(
-        AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
+        AndroidSchedulers.mainThread()).subscribeOn(Schedulers.computation());
   }
 
   public static <T> Observable<T> getDeferedObservable(final Observable<T> observable) {

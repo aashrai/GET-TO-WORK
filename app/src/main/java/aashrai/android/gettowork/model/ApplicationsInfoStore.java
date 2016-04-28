@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 @SettingsScope public class ApplicationsInfoStore {
 
@@ -33,8 +32,7 @@ import rx.schedulers.Schedulers;
     }
 
     return applicationInfoFetcher.getFilteredApplications(applicationInfoList, query)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io());
+        .observeOn(AndroidSchedulers.mainThread());
   }
 
   private static class ApplicationInfoListSetter implements Action1<List<ApplicationInfo>> {
