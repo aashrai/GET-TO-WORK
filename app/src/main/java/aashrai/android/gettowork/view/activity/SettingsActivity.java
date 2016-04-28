@@ -22,13 +22,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.Bind;
 import com.jakewharton.rxbinding.widget.RxTextView;
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import rx.functions.Func1;
 
 public class SettingsActivity extends BaseActivity
     implements SettingsView, Action1<CharSequence>, TextView.OnEditorActionListener {
@@ -38,7 +38,7 @@ public class SettingsActivity extends BaseActivity
   @Bind(R.id.et_search) EditText search;
   @Inject SettingsActivityPresenter presenter;
   PackageListAdapter adapter;
-  CompositeSubscription compositeSubscription;
+  Subscription searchSubscription;
   private static final String TAG = "SettingsActivity";
   SettingsComponent settingsComponent;
 
@@ -52,12 +52,16 @@ public class SettingsActivity extends BaseActivity
     search.setCompoundDrawablesWithIntrinsicBounds(null, null,
         ContextCompat.getDrawable(this, R.drawable.ic_search), null);
     search.setOnEditorActionListener(this);
-    compositeSubscription = new CompositeSubscription();
-    compositeSubscription.add(RxTextView.textChanges(search)
+    searchSubscription = RxTextView.textChanges(search)
         .debounce(100, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
+        .map(new Func1<CharSequence, String>() {
+          @Override public String call(CharSequence charSequence) {
+            return charSequence.toString();
+          }
+        })
         .startWith("")
-        .subscribe(new SearchBarSubscriber(new WeakReference<>(presenter))));
+        .subscribe(new SearchBarSubscriber(presenter));
   }
 
   @Override public void configureDagger() {
@@ -95,7 +99,7 @@ public class SettingsActivity extends BaseActivity
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    compositeSubscription.unsubscribe();
+    searchSubscription.unsubscribe();
     presenter.onDestroy();
     settingsComponent = null;
   }
@@ -109,16 +113,16 @@ public class SettingsActivity extends BaseActivity
     return false;
   }
 
-  private static class SearchBarSubscriber implements Action1<CharSequence> {
+  private static class SearchBarSubscriber implements Action1<String> {
 
     private final SettingsActivityPresenter presenter;
 
-    private SearchBarSubscriber(WeakReference<SettingsActivityPresenter> presenterWeakReference) {
-      presenter = presenterWeakReference.get();
+    private SearchBarSubscriber(SettingsActivityPresenter presenter) {
+      this.presenter = presenter;
     }
 
-    @Override public void call(CharSequence charSequence) {
-      presenter.onSearch(charSequence.toString());
+    @Override public void call(String query) {
+      presenter.onSearch(query);
     }
   }
 }

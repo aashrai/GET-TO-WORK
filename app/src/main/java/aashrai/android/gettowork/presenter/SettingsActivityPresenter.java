@@ -8,7 +8,6 @@ import aashrai.android.gettowork.view.SettingsView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import java.lang.ref.WeakReference;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +55,7 @@ import rx.Subscription;
 
   private Subscription performSearch(String query) {
     return applicationsInfoStore.getInstalledApplications(query)
-        .subscribe(new PackageFetchSubscriber(new WeakReference<>(settingsView)));
+        .subscribe(new PackageFetchSubscriber());
   }
 
   public void onDestroy() {
@@ -72,16 +71,12 @@ import rx.Subscription;
     preferences.edit().putStringSet(Constants.ACTIVATED_PACKAGES, activatedPackages).apply();
   }
 
-  private static class PackageFetchSubscriber extends Subscriber<List<ApplicationInfo>> {
+  private class PackageFetchSubscriber extends Subscriber<List<ApplicationInfo>> {
 
-    private final SettingsView settingsView;
-
-    private PackageFetchSubscriber(WeakReference<SettingsView> weakReference) {
-      this.settingsView = weakReference.get();
+    public PackageFetchSubscriber() {
     }
 
     @Override public void onStart() {
-      super.onStart();
       settingsView.startProgressBar();
     }
 
