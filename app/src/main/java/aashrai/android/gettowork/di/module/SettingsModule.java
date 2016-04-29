@@ -10,8 +10,17 @@ import dagger.Provides;
 
 @Module public class SettingsModule {
 
+  private final SettingsActivityPresenter settingsActivityPresenter;
+
+  public SettingsModule(SettingsActivityPresenter settingsActivityPresenter) {
+    this.settingsActivityPresenter = settingsActivityPresenter;
+  }
+
   @Provides @SettingsScope SettingsActivityPresenter getSettingsActivityPresenter(Context context,
       SharedPreferences sharedPreferences, ApplicationsInfoStore applicationsInfoStore) {
-    return new SettingsActivityPresenter(context, sharedPreferences, applicationsInfoStore);
+    if (settingsActivityPresenter == null) {
+      return new SettingsActivityPresenter(context, sharedPreferences, applicationsInfoStore);
+    }
+    return settingsActivityPresenter;
   }
 }

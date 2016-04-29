@@ -4,11 +4,13 @@ import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.adapter.PackageListAdapter;
 import aashrai.android.gettowork.di.component.SettingsComponent;
+import aashrai.android.gettowork.di.module.SettingsModule;
 import aashrai.android.gettowork.presenter.SettingsActivityPresenter;
 import aashrai.android.gettowork.utils.AppListDecorator;
 import aashrai.android.gettowork.view.SettingsView;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,7 +46,7 @@ public class SettingsActivity extends BaseActivity
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter.setView(this);
+    presenter.setView(this).execute();
     configureSearch();
   }
 
@@ -60,14 +62,18 @@ public class SettingsActivity extends BaseActivity
             return charSequence.toString();
           }
         })
-        .startWith("")
-        .subscribe(new SearchBarSubscriber(presenter));
+        //.startWith("")
+        .subscribe(new SearchBarSubscriber());
   }
 
   @Override public void configureDagger() {
-    settingsComponent =
-        ((GoToWorkApplication) getApplication()).getApplicationComponent().getSettingsComponent();
+    settingsComponent = ((GoToWorkApplication) getApplication()).getApplicationComponent()
+        .getSettingsComponent(createSettingsModule());
     settingsComponent.inject(this);
+  }
+
+  @NonNull private SettingsModule createSettingsModule() {
+    return new SettingsModule((SettingsActivityPresenter) getLastCustomNonConfigurationInstance());
   }
 
   @Override public int getLayoutId() {
@@ -113,13 +119,11 @@ public class SettingsActivity extends BaseActivity
     return false;
   }
 
-  private static class SearchBarSubscriber implements Action1<String> {
+  @Override public Object onRetainCustomNonConfigurationInstance() {
+    return presenter;
+  }
 
-    private final SettingsActivityPresenter presenter;
-
-    private SearchBarSubscriber(SettingsActivityPresenter presenter) {
-      this.presenter = presenter;
-    }
+  private class SearchBarSubscriber implements Action1<String> {
 
     @Override public void call(String query) {
       presenter.onSearch(query);

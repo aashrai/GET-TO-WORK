@@ -8,10 +8,12 @@ import aashrai.android.gettowork.view.SettingsView;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import com.fernandocejas.frodo.annotation.RxLogSubscriber;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 
@@ -22,6 +24,8 @@ import rx.Subscription;
   private final SharedPreferences preferences;
   private final Set<String> activatedPackages;
   private final ApplicationsInfoStore applicationsInfoStore;
+  private Observable<List<ApplicationInfo>> applicationInfoObservable;
+  private PackageListAdapter packageListAdapter;
   private SettingsView settingsView;
   private Subscription searchSubscription;
   private static final String TAG = "SettingsActivity";
@@ -36,26 +40,37 @@ import rx.Subscription;
         preferences.getStringSet(Constants.ACTIVATED_PACKAGES, new HashSet<String>()));
   }
 
-  public void setView(SettingsView settingsView) {
+  public SettingsActivityPresenter setView(SettingsView settingsView) {
     this.settingsView = settingsView;
-    settingsView.configureRecyclerView(createPackageAdapter());
+    settingsView.configureRecyclerView(getPackageAdapterInstance());
+    return this;
   }
 
-  private PackageListAdapter createPackageAdapter() {
-    PackageListAdapter packageListAdapter = new PackageListAdapter(activatedPackages, context);
-    packageListAdapter.setPackageToggleListener(this);
+  public void execute() {
+    if (applicationInfoObservable == null) {
+      applicationInfoObservable =
+          applicationsInfoStore.getAllInstalledApplications();
+    }
+    updateSubscription();
+  }
+
+  private void updateSubscription() {
+    searchSubscription = applicationInfoObservable.subscribe(new PackageFetchSubscriber());
+  }
+
+  private PackageListAdapter getPackageAdapterInstance() {
+    if (packageListAdapter == null) {
+      packageListAdapter = new PackageListAdapter(activatedPackages, context);
+      packageListAdapter.setPackageToggleListener(this);
+    }
     return packageListAdapter;
   }
 
   public void onSearch(final String query) {
     //Remove any pending searches
     if (searchSubscription != null) searchSubscription.unsubscribe();
-    searchSubscription = performSearch(query);
-  }
-
-  private Subscription performSearch(String query) {
-    return applicationsInfoStore.getInstalledApplications(query)
-        .subscribe(new PackageFetchSubscriber());
+    applicationInfoObservable = applicationsInfoStore.getInstalledApplications(query);
+    updateSubscription();
   }
 
   public void onDestroy() {
@@ -71,7 +86,7 @@ import rx.Subscription;
     preferences.edit().putStringSet(Constants.ACTIVATED_PACKAGES, activatedPackages).apply();
   }
 
-  private class PackageFetchSubscriber extends Subscriber<List<ApplicationInfo>> {
+  @RxLogSubscriber private class PackageFetchSubscriber extends Subscriber<List<ApplicationInfo>> {
 
     public PackageFetchSubscriber() {
     }
@@ -82,12 +97,10 @@ import rx.Subscription;
 
     @Override public void onCompleted() {
       settingsView.stopProgressBar();
-      unsubscribe();
     }
 
     @Override public void onError(Throwable e) {
       settingsView.stopProgressBar();
-      unsubscribe();
     }
 
     @Override public void onNext(List<ApplicationInfo> applicationInfoList) {

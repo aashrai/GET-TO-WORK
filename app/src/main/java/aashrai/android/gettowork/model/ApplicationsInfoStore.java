@@ -32,23 +32,17 @@ import rx.subjects.Subject;
       applicationInfoSubject = BehaviorSubject.create();
     }
 
-    if (applicationInfoList.isEmpty()) {
-      checkQueryIsEmpty(query);
-      subjectSubscription = applicationInfoFetcher.getAllApplications()
-          .doOnNext(new ApplicationInfoListSetter())
-          .subscribe(applicationInfoSubject);
-    } else {
-      subjectSubscription =
-          applicationInfoFetcher.getFilteredApplications(applicationInfoList, query)
-              .subscribe(applicationInfoSubject);
-    }
+    subjectSubscription = applicationInfoFetcher.getFilteredApplications(applicationInfoList, query)
+        .subscribe(applicationInfoSubject);
     return applicationInfoSubject;
   }
 
-  private void checkQueryIsEmpty(String query) {
-    if (!query.isEmpty()) {
-      throw (new IllegalArgumentException("First search " + "query should be empty"));
-    }
+  public Observable<List<ApplicationInfo>> getAllInstalledApplications() {
+    applicationInfoSubject = BehaviorSubject.create();
+    subjectSubscription = applicationInfoFetcher.getAllApplications()
+        .doOnNext(new ApplicationInfoListSetter())
+        .subscribe(applicationInfoSubject);
+    return applicationInfoSubject;
   }
 
   private class ApplicationInfoListSetter implements Action1<List<ApplicationInfo>> {
