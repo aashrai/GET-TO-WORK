@@ -83,13 +83,14 @@ public class Utils {
   }
 
   public static Observable<List<ApplicationInfo>> getAllApplications(final Context context) {
-    return getDeferedObservable(Observable.from(
+    return Observable.from(
         context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
+        .observeOn(Schedulers.computation())
         .filter(Utils.removeSelfPackage(context))
         .filter(Utils.removeLaunchers(context))
         .filter(Utils.removeSystemApps())
-        .toSortedList(Utils.getApplicationSortFunction(context))).observeOn(
-        AndroidSchedulers.mainThread()).subscribeOn(Schedulers.computation());
+        .toSortedList(Utils.getApplicationSortFunction(context))
+        .observeOn(AndroidSchedulers.mainThread());
   }
 
   public static <T> Observable<T> getDeferedObservable(final Observable<T> observable) {

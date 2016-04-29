@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -27,7 +28,8 @@ import rx.schedulers.Schedulers;
     return Observable.from(applicationInfoList)
         .observeOn(Schedulers.computation())
         .filter(new PackageQueryFilter(context, query))
-        .toList();
+        .toList()
+        .observeOn(AndroidSchedulers.mainThread());
   }
 
   private static class PackageQueryFilter implements Func1<ApplicationInfo, Boolean> {
