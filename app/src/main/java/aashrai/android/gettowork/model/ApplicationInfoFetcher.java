@@ -21,7 +21,7 @@ import rx.schedulers.Schedulers;
     this.context = context;
   }
 
-  @RxLogObservable public Observable<List<ApplicationInfo>> getAllApplications() {
+  @RxLogObservable private Observable<List<ApplicationInfo>> getAllApplications() {
     return Observable.from(
         context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
         .observeOn(Schedulers.computation())
