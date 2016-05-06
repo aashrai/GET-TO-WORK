@@ -43,13 +43,6 @@ public class SettingsActivityPresenterTest extends BaseTest {
     settingsActivityPresenter.setView(settingsView);
   }
 
-  @Test public void testExecute() throws Exception {
-    given(applicationsInfoStore.getInstalledApplications("")).willReturn(
-        Observable.<List<ApplicationInfo>>empty());
-    settingsActivityPresenter.execute();
-    verify(applicationsInfoStore).getInstalledApplications("");
-  }
-
   @Test public void testOnSearch() throws Exception {
     given(applicationsInfoStore.getInstalledApplications(mockString)).willReturn(
         Observable.just(applicationInfoList));
