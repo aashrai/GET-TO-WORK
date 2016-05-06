@@ -16,7 +16,8 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import timber.log.Timber;
+
+import static aashrai.android.gettowork.utils.Utils.EMPTY_STRING;
 
 @SettingsScope public class SettingsActivityPresenter
     implements PackageListAdapter.onPackageToggleListener {
@@ -29,7 +30,6 @@ import timber.log.Timber;
   private PackageListAdapter packageListAdapter;
   private SettingsView settingsView;
   private Subscription searchSubscription;
-  private static final String TAG = "SettingsActivity";
 
   @Inject public SettingsActivityPresenter(Context context, SharedPreferences preferences,
       ApplicationsInfoStore applicationsInfoStore) {
@@ -39,6 +39,7 @@ import timber.log.Timber;
     //A copy is created because of a bug in android see issue 27801
     activatedPackages = new HashSet<>(
         preferences.getStringSet(Constants.ACTIVATED_PACKAGES, new HashSet<String>()));
+    applicationInfoObservable = applicationsInfoStore.getInstalledApplications(EMPTY_STRING);
   }
 
   public SettingsActivityPresenter setView(SettingsView settingsView) {
@@ -48,9 +49,6 @@ import timber.log.Timber;
   }
 
   public void execute() {
-    if (applicationInfoObservable == null) {
-      applicationInfoObservable = applicationsInfoStore.getInstalledApplications("");
-    }
     updateSubscription();
   }
 
@@ -68,7 +66,6 @@ import timber.log.Timber;
 
   public void onSearch(final String query) {
     //Remove any pending searches
-    Timber.d("onSearch() called with: " + "query = [" + query + "]");
     if (searchSubscription != null) searchSubscription.unsubscribe();
     applicationInfoObservable = applicationsInfoStore.getInstalledApplications(query);
     updateSubscription();
@@ -88,9 +85,6 @@ import timber.log.Timber;
   }
 
   @RxLogSubscriber private class PackageFetchSubscriber extends Subscriber<List<ApplicationInfo>> {
-
-    public PackageFetchSubscriber() {
-    }
 
     @Override public void onStart() {
       settingsView.startProgressBar();
