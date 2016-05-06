@@ -42,6 +42,7 @@ public class SettingsActivity extends BaseActivity
   PackageListAdapter adapter;
   Subscription searchSubscription;
   private static final String TAG = "SettingsActivity";
+  boolean straySearch = true;
   SettingsComponent settingsComponent;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,7 +127,11 @@ public class SettingsActivity extends BaseActivity
   private class SearchBarSubscriber implements Action1<String> {
 
     @Override public void call(String query) {
-      presenter.onSearch(query);
+      if (!straySearch) {
+        presenter.onSearch(query);
+      } else {
+        straySearch = false;
+      }
     }
   }
 }
