@@ -44,10 +44,10 @@ public class SettingsActivityPresenterTest extends BaseTest {
   }
 
   @Test public void testExecute() throws Exception {
-    given(applicationsInfoStore.getAllInstalledApplications()).willReturn(
+    given(applicationsInfoStore.getInstalledApplications("")).willReturn(
         Observable.<List<ApplicationInfo>>empty());
     settingsActivityPresenter.execute();
-    verify(applicationsInfoStore).getAllInstalledApplications();
+    verify(applicationsInfoStore).getInstalledApplications("");
   }
 
   @Test public void testOnSearch() throws Exception {
