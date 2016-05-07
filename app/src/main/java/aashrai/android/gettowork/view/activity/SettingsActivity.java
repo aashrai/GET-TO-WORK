@@ -4,11 +4,13 @@ import aashrai.android.gettowork.GoToWorkApplication;
 import aashrai.android.gettowork.R;
 import aashrai.android.gettowork.adapter.PackageListAdapter;
 import aashrai.android.gettowork.di.component.SettingsComponent;
+import aashrai.android.gettowork.di.module.SettingsModule;
 import aashrai.android.gettowork.presenter.SettingsActivityPresenter;
 import aashrai.android.gettowork.utils.AppListDecorator;
 import aashrai.android.gettowork.view.SettingsView;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,13 +24,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.Bind;
 import com.jakewharton.rxbinding.widget.RxTextView;
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.subscriptions.CompositeSubscription;
+import rx.functions.Func1;
 
 public class SettingsActivity extends BaseActivity
     implements SettingsView, Action1<CharSequence>, TextView.OnEditorActionListener {
@@ -38,13 +40,14 @@ public class SettingsActivity extends BaseActivity
   @Bind(R.id.et_search) EditText search;
   @Inject SettingsActivityPresenter presenter;
   PackageListAdapter adapter;
-  CompositeSubscription compositeSubscription;
+  Subscription searchSubscription;
   private static final String TAG = "SettingsActivity";
+  boolean straySearch = true;
   SettingsComponent settingsComponent;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    presenter.setView(this);
+    presenter.setView(this).execute();
     configureSearch();
   }
 
@@ -52,18 +55,26 @@ public class SettingsActivity extends BaseActivity
     search.setCompoundDrawablesWithIntrinsicBounds(null, null,
         ContextCompat.getDrawable(this, R.drawable.ic_search), null);
     search.setOnEditorActionListener(this);
-    compositeSubscription = new CompositeSubscription();
-    compositeSubscription.add(RxTextView.textChanges(search)
+    searchSubscription = RxTextView.textChanges(search)
         .debounce(100, TimeUnit.MILLISECONDS)
         .observeOn(AndroidSchedulers.mainThread())
-        .startWith("")
-        .subscribe(new SearchBarSubscriber(new WeakReference<>(presenter))));
+        .map(new Func1<CharSequence, String>() {
+          @Override public String call(CharSequence charSequence) {
+            return charSequence.toString();
+          }
+        })
+        //.startWith("")
+        .subscribe(new SearchBarSubscriber());
   }
 
   @Override public void configureDagger() {
-    settingsComponent =
-        ((GoToWorkApplication) getApplication()).getApplicationComponent().getSettingsComponent();
+    settingsComponent = ((GoToWorkApplication) getApplication()).getApplicationComponent()
+        .getSettingsComponent(createSettingsModule());
     settingsComponent.inject(this);
+  }
+
+  @NonNull private SettingsModule createSettingsModule() {
+    return new SettingsModule((SettingsActivityPresenter) getLastCustomNonConfigurationInstance());
   }
 
   @Override public int getLayoutId() {
@@ -95,7 +106,7 @@ public class SettingsActivity extends BaseActivity
 
   @Override protected void onDestroy() {
     super.onDestroy();
-    compositeSubscription.unsubscribe();
+    searchSubscription.unsubscribe();
     presenter.onDestroy();
     settingsComponent = null;
   }
@@ -109,16 +120,18 @@ public class SettingsActivity extends BaseActivity
     return false;
   }
 
-  private static class SearchBarSubscriber implements Action1<CharSequence> {
+  @Override public Object onRetainCustomNonConfigurationInstance() {
+    return presenter;
+  }
 
-    private final SettingsActivityPresenter presenter;
+  private class SearchBarSubscriber implements Action1<String> {
 
-    private SearchBarSubscriber(WeakReference<SettingsActivityPresenter> presenterWeakReference) {
-      presenter = presenterWeakReference.get();
-    }
-
-    @Override public void call(CharSequence charSequence) {
-      presenter.onSearch(charSequence.toString());
+    @Override public void call(String query) {
+      if (!straySearch) {
+        presenter.onSearch(query);
+      } else {
+        straySearch = false;
+      }
     }
   }
 }

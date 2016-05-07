@@ -2,51 +2,28 @@ package aashrai.android.gettowork.model;
 
 import aashrai.android.gettowork.di.SettingsScope;
 import android.content.pm.ApplicationInfo;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import rx.subjects.BehaviorSubject;
+import rx.subjects.Subject;
 
 @SettingsScope public class ApplicationsInfoStore {
 
   private final ApplicationInfoFetcher applicationInfoFetcher;
-  final List<ApplicationInfo> applicationInfoList;
 
   @Inject public ApplicationsInfoStore(ApplicationInfoFetcher applicationInfoFetcher) {
     this.applicationInfoFetcher = applicationInfoFetcher;
-    applicationInfoList = new ArrayList<>();
   }
 
   public Observable<List<ApplicationInfo>> getInstalledApplications(final String query) {
+    //We are using Subjects here to remove the dependence on AndroidSchedulers.mainThread() to
+    // report on the main thread since it causes race condition, using PublishSubject also helps
+    // with restoring state across configuration changes
 
-    if (applicationInfoList.isEmpty()) {
-      if (!query.isEmpty()) {
-        return Observable.error(
-            new IllegalArgumentException("First search " + "query should be empty"));
-      }
-      return applicationInfoFetcher.getAllApplications()
-          .doOnNext(new ApplicationInfoListSetter(new WeakReference<>(applicationInfoList)));
-    }
-
-    return applicationInfoFetcher.getFilteredApplications(applicationInfoList, query)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io());
-  }
-
-  private static class ApplicationInfoListSetter implements Action1<List<ApplicationInfo>> {
-
-    private final List<ApplicationInfo> applicationInfoList;
-
-    private ApplicationInfoListSetter(WeakReference<List<ApplicationInfo>> listWeakReference) {
-      applicationInfoList = listWeakReference.get();
-    }
-
-    @Override public void call(List<ApplicationInfo> applicationInfoList) {
-      this.applicationInfoList.addAll(applicationInfoList);
-    }
+    Subject<List<ApplicationInfo>, List<ApplicationInfo>> applicationInfoSubject =
+        BehaviorSubject.create();
+    applicationInfoFetcher.getFilteredApplications(query).subscribe(applicationInfoSubject);
+    return applicationInfoSubject;
   }
 }

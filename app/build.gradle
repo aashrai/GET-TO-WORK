@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'com.fernandocejas.frodo'
 
 def travisBuild = System.getenv("CI") == "true"
 def preDexEnabled = "true".equals(System.getProperty("pre-dex", "true"))
@@ -10,7 +11,7 @@ android {
 
   defaultConfig {
     applicationId "aashrai.android.gettowork"
-    minSdkVersion 17
+    minSdkVersion 18
     targetSdkVersion 23
     versionCode 1
     versionName "1.0"
@@ -28,7 +29,7 @@ android {
 }
 
 ext {
-  supportLibVersion = "23.2.1"
+  supportLibVersion = "23.3.0"
   daggerVersion = "2.2"
   butterknifeVersion = "7.0.1"
 }
@@ -44,6 +45,7 @@ dependencies {
   compile 'io.reactivex:rxjava:1.1.3'
   compile 'io.reactivex:rxandroid:1.1.0'
   compile 'com.squareup.picasso:picasso:2.5.2'
+  compile 'com.jakewharton.timber:timber:4.1.2'
 
   testCompile 'junit:junit:4.12'
   testCompile "org.mockito:mockito-core:1.10.19"

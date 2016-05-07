@@ -3,6 +3,7 @@ package aashrai.android.gettowork;
 import aashrai.android.gettowork.utils.Constants;
 import aashrai.android.gettowork.utils.Utils;
 import aashrai.android.gettowork.view.activity.AppLockActivity;
+import aashrai.android.gettowork.view.activity.MainActivity;
 import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,11 +15,17 @@ import java.util.Set;
 public class OverlayService extends AccessibilityService {
 
   SharedPreferences sharedPreferences;
-  private static final String TAG = "OverlayService";
 
   @Override protected void onServiceConnected() {
     super.onServiceConnected();
+    startMainActivity();
     sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+  }
+
+  private void startMainActivity() {
+    Intent intent = new Intent(this, MainActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    startActivity(intent);
   }
 
   @Override public void onAccessibilityEvent(AccessibilityEvent event) {

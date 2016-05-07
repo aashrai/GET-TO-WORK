@@ -5,17 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.support.graphics.drawable.VectorDrawableCompat;
-import java.util.List;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.schedulers.Schedulers;
 
 public class Utils {
+
+  public static final String EMPTY_STRING = "";
+
   public static Intent getHomeScreenIntent() {
     Intent intent = new Intent(Intent.ACTION_MAIN);
     intent.addCategory(Intent.CATEGORY_HOME);
@@ -80,24 +77,5 @@ public class Utils {
 
   public static String getApplicationName(ApplicationInfo applicationInfo, Context context) {
     return applicationInfo.loadLabel(context.getPackageManager()).toString().toLowerCase();
-  }
-
-  public static Observable<List<ApplicationInfo>> deferedApplicationInfoFetcher(
-      final Context context) {
-    return getDeferedObservable(Observable.from(
-        context.getPackageManager().getInstalledApplications(PackageManager.GET_META_DATA))
-        .filter(Utils.removeSelfPackage(context))
-        .filter(Utils.removeLaunchers(context))
-        .filter(Utils.removeSystemApps())
-        .toSortedList(Utils.getApplicationSortFunction(context))).observeOn(
-        AndroidSchedulers.mainThread()).subscribeOn(Schedulers.io());
-  }
-
-  public static <T> Observable<T> getDeferedObservable(final Observable<T> observable) {
-    return Observable.defer(new Func0<Observable<T>>() {
-      @Override public Observable<T> call() {
-        return observable;
-      }
-    });
   }
 }
