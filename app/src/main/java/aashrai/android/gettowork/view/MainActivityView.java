@@ -1,38 +1,35 @@
 package aashrai.android.gettowork.view;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 
-public interface MainActivityView {
+public interface MainActivityView extends BaseView {
 
-  void showToast(String message);
+    void showToast(String message);
 
-  void launchActivity(Intent intent);
+    void setActivateDrawable(Drawable drawable);
 
-  void setActivateDrawable(Drawable drawable);
+    String getWarningText();
 
-  String getWarningText();
+    void showWarningText();
 
-  void showWarningText();
+    void hideWarningText();
 
-  void hideWarningText();
+    void setWarningText(String text);
 
-  void setWarningText(String text);
+    void showTimingGrid();
 
-  void showTimingGrid();
+    void hideActivateHeader();
 
-  void hideActivateHeader();
+    void showActivateHeader();
 
-  void showActivateHeader();
+    void hideTimingGrid();
 
-  void hideTimingGrid();
+    void showActivateButton();
 
-  void showActivateButton();
+    void hideActivateButton();
 
-  void hideActivateButton();
+    void showAccessibilityDialog();
 
-  void showAccessibilityDialog();
-
-  Context getActivityContext();
+    Context getActivityContext();
 }

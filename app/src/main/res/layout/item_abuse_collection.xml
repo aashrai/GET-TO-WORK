@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppCompat.Button.Borderless"
+    android:layout_width="wrap_content"
+    android:layout_height="200dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+    tools:text="The Fuck Off Collection">
+
+</Button>

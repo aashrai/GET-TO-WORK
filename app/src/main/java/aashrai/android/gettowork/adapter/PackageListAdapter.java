@@ -1,7 +1,5 @@
 package aashrai.android.gettowork.adapter;
 
-import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.utils.AppIconRequestHandler;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -11,13 +9,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Switch;
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
+
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import aashrai.android.gettowork.R;
+import aashrai.android.gettowork.utils.AppIconRequestHandler;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 
 public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.ViewHolder> {
 
@@ -42,7 +45,7 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
     void onPackageToggle(String packageName, boolean activated);
   }
 
-  onPackageToggleListener packageToggleListener;
+  private onPackageToggleListener packageToggleListener;
 
   public void setPackageToggleListener(onPackageToggleListener packageToggleListener) {
     this.packageToggleListener = packageToggleListener;
@@ -81,9 +84,9 @@ public class PackageListAdapter extends RecyclerView.Adapter<PackageListAdapter.
     notifyItemRangeInserted(0, updatedSize);
   }
 
-  public class ViewHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.sw_activate) Switch packageName;
-    @Bind(R.id.iv_thumbnail) ImageView thumbnail;
+  class ViewHolder extends RecyclerView.ViewHolder {
+    @BindView(R.id.sw_activate) Switch packageName;
+    @BindView(R.id.iv_thumbnail) ImageView thumbnail;
     boolean defaultCheck;
 
     public ViewHolder(View itemView) {

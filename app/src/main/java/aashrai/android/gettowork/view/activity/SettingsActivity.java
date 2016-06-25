@@ -1,13 +1,5 @@
 package aashrai.android.gettowork.view.activity;
 
-import aashrai.android.gettowork.GoToWorkApplication;
-import aashrai.android.gettowork.R;
-import aashrai.android.gettowork.adapter.PackageListAdapter;
-import aashrai.android.gettowork.di.component.SettingsComponent;
-import aashrai.android.gettowork.di.module.SettingsModule;
-import aashrai.android.gettowork.presenter.SettingsActivityPresenter;
-import aashrai.android.gettowork.utils.AppListDecorator;
-import aashrai.android.gettowork.view.SettingsView;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,11 +14,23 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import butterknife.Bind;
+
 import com.jakewharton.rxbinding.widget.RxTextView;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
+
+import aashrai.android.gettowork.GoToWorkApplication;
+import aashrai.android.gettowork.R;
+import aashrai.android.gettowork.adapter.PackageListAdapter;
+import aashrai.android.gettowork.di.component.SettingsComponent;
+import aashrai.android.gettowork.di.module.SettingsModule;
+import aashrai.android.gettowork.presenter.SettingsActivityPresenter;
+import aashrai.android.gettowork.utils.AppListDecorator;
+import aashrai.android.gettowork.view.SettingsView;
+import butterknife.BindView;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -35,9 +39,9 @@ import rx.functions.Func1;
 public class SettingsActivity extends BaseActivity
     implements SettingsView, Action1<CharSequence>, TextView.OnEditorActionListener {
 
-  @Bind(R.id.rv_packages) RecyclerView packageList;
-  @Bind(R.id.progress) ProgressBar progressBar;
-  @Bind(R.id.et_search) EditText search;
+  @BindView(R.id.rv_packages) RecyclerView packageList;
+  @BindView(R.id.progress) ProgressBar progressBar;
+  @BindView(R.id.et_search) EditText search;
   @Inject SettingsActivityPresenter presenter;
   PackageListAdapter adapter;
   Subscription searchSubscription;
